@@ -72,6 +72,8 @@ kind: Application
 metadata:
   name: managed-namespace
   namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: pe-workshop
   source:
@@ -80,6 +82,7 @@ spec:
     path: managed-namespace
   destination:
     server: https://kubernetes.default.svc
+    namespace: dev-team-alpha
   syncPolicy:
     automated:
       selfHeal: true
@@ -101,7 +104,7 @@ The `SYNC STATUS` should show `Synced` and `HEALTH STATUS` should show `Healthy`
 +
 [source,bash,role="copypaste",subs="attributes+"]
 ----
-oc get namespace,resourcequota,limitrange,rolebinding,networkpolicy -n dev-team-alpha
+oc get resourcequota,limitrange,rolebinding,networkpolicy -n dev-team-alpha
 ----
 +
 You should see all five resources in place.
@@ -125,11 +128,11 @@ https://console-openshift-console.{openshift_cluster_ingress_domain}
 * Username: `dev1`
 * Password: `{common_password}`
 
-. Once logged in, look at the **Project** dropdown at the top of the page. You should only see `dev-team-alpha` -- no `vault`, `openshift-gitops`, `rhdh`, or any other infrastructure namespace. The RoleBinding scoped `dev1` to this namespace only.
+. Once logged in, you should see your **Projects** list. You should only see `dev-team-alpha` and `parasol` related Projects -- no `vault`, `openshift-gitops`, `rhdh`, or any other infrastructure namespace. The RoleBinding scoped `dev1` and `dev2` to the `dev-team-alpha` namespace only.
 
-. Select the `dev-team-alpha` project and navigate to **Administration > ResourceQuotas**
+. Select the `dev-team-alpha` project and navigate to **Administration > ResourceQuotas** using the left side menu.
 +
-You'll see the `dev-team-alpha-quota` with the limits the platform team defined: 5 pods, 512Mi total memory requests, and 1Gi total memory limits. The *Used* column shows current consumption.
+You'll see the `dev-team-alpha-quota`. Click it, scroll down, and note the limits the platform team defined: 5 pods, 512Mi total memory requests, and 1Gi total memory limits. The *Used* column shows current consumption.
 
 . Navigate to **Administration > LimitRanges**
 +

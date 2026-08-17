@@ -3,7 +3,7 @@
 :toc: macro
 :toclevels: 1
 
-Over the last three modules, you've worked with the building blocks of a well-run platform: GitOps for declarative deployment, Vault for secrets management, and managed namespaces with resource guardrails and access controls. Each of these works -- but each required manual steps, CLI commands, and platform knowledge that most developers don't have (or want).
+Over the last three modules, you've worked with the building blocks of a well-run platform: GitOps for declarative deployment, Vault for secrets management, and managed namespaces with resource guardrails and access controls. Each of these works -- but each required manual steps, CLI commands, and platform knowledge that most developers don't have (or want). This makes it hard to scale.
 
 This is where the developer portal comes in. Red Hat Developer Hub unifies these capabilities behind a self-service interface, so developers can discover services, create applications, and access their tools without needing to understand the underlying platform primitives. Your role as a member of the Platform Engineering team is to deploy and configure it.
 
@@ -24,7 +24,7 @@ A repository containing a basic set of configuration files has been pre-created 
 
 image::m3/gitlab-files.png[Configuration base files in GitLab,link=self,window=blank,align="center",width=700,title=GitLab: A set of base configuration files for you Red Hat Developer Hub deployment]
 
-The *base/* folder contains three files that are used to configure an instance of Red Hat Developer Hub, plus a _kustomization.yaml_ file - more on that last one later:
+The *base/* folder contains files that are used to configure an instance of Red Hat Developer Hub, plus a _kustomization.yaml_ file - more on that last one later:
 
 * _backstage-cr.yaml_ - A minimal configuration to deploy your RHDH instance.
 * _configmap-app-config.yaml_ - Standard https://backstage.io/docs/conf/[Backstage configuration] file, stored in a Kubernetes https://kubernetes.io/docs/concepts/configuration/configmap/[ConfigMap].
@@ -92,7 +92,7 @@ EOF
 * A `Backstage` custom resource -- tells the Operator what to deploy
 * A `ConfigMap` with the app-config -- minimal configuration with just a title and base URL
 * A `ConfigMap` for dynamic plugins -- all plugins disabled for now
-. The Backstage resource should have a number of child resources that it manages.
+. The Backstage resource should have a number of child resources that it manages, including a `dynamic-plugins-root` PersistentVolumeClaim -- this is where Developer Hub unpacks and loads plugins at runtime without rebuilding the container image.
 +
 image::m3/argo-app-tree.png[The Argo CD application view showing all managed resources,link=self,window=blank,align="center",width=700,title="Showing resources managed by the *developer-hub* Application in Argo CD"]
 
@@ -104,10 +104,10 @@ In the Argo CD Application view, you should see:
 
 * Sync status: **Synced**
 * Health status: **Healthy** (this may take 1-2 minutes as the Operator creates the pods)
-* Three resources deployed: 1 Backstage CR, 2 ConfigMaps
+* Four resources deployed: 1 Backstage CR, 2 ConfigMaps, 1 PVC
 * Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol.
 
-NOTE: It can take a few minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins.
+NOTE: It can take a few minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
 
 == Exercise 2: Access Developer Hub
 
@@ -115,7 +115,7 @@ Once the Operator has created the deployment and the Pod is ready, Developer Hub
 
 . Open the **Developer Hub** tab
 +
-If the tab doesn't load immediately, wait 1-2 minutes for the pods to start.
+If the tab doesn't load immediately, wait 1-2 minutes for the pod to start. Remember, it needs to show a green heart symbol in Argo CD.
 
 . You should see the Developer Hub landing page with guest authentication
 +

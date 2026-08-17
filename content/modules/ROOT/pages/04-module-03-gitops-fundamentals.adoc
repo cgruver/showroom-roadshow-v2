@@ -18,9 +18,9 @@ By the end of this module, you'll be able to:
 
 == The GitOps model
 
-Traditional deployments work by _pushing_ changes to a cluster: you run `oc apply`, a pipeline runs `kubectl`, or someone clicks a button in a console. The cluster has no memory of what it _should_ look like -- it only knows what it _does_ look like right now.
+Traditional deployments work by _pushing_ changes to a cluster: you run `oc apply`, maybe a Jenkins pipeline runs `kubectl`, or someone clicks a button in a console. The cluster has no reference of what it _should_ look like -- it only knows what it _does_ look like right now.
 
-GitOps inverts this. A Git repository holds the desired state -- the complete set of manifests that define a workload. A controller (Argo CD, in your case) continuously compares that desired state against the cluster's actual state and reconciles the difference.
+GitOps inverts this. A Git repository holds the desired state -- the complete set of manifests that define a workload. A controller (Argo CD, in your case) continuously compares that desired state in Git against the cluster's actual state and reconciles the difference.
 
 [cols="1,1",options="header"]
 |===
@@ -38,6 +38,15 @@ GitOps inverts this. A Git repository holds the desired state -- the complete se
 |Rollback means re-running a pipeline
 |Rollback means reverting a commit
 |===
+
+[mermaid,width=90%]
+....
+flowchart LR
+    Dev["Developer"] -- "git push" --> Git["Git Repository\n(desired state)"]
+    Git -- "detects changes" --> Argo["Argo CD\n(controller)"]
+    Argo -- "compares &\napplies" --> K8s["Kubernetes\n(actual state)"]
+    K8s -. "drift detected" .-> Argo
+....
 
 This module gives you the hands-on feel for that loop before you use it for the rest of the workshop.
 
@@ -100,6 +109,12 @@ NOTE: The user you've logged in as can view, but not edit/delete the existing Ar
 
 |Sync Policy
 |`Manual`
+
+|Auto-Create Namespace
+|`Enabled`
+
+|Set Deletion Finalizer
+|`Enabled`
 
 |Repository URL
 |`https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/prerequisite-samples.git`

@@ -64,7 +64,7 @@ You may need to authorise access when prompted.
 * `developer-hub-prereqs` -- The Developer Hub operator subscription
 * `pe-workshop-argocd` -- Your workshop https://argo-cd.readthedocs.io/en/stable/user-guide/projects/[Project] with scoped permissions
 
-. Click on **`app-of-apps`** to see the dependency graph. This shows how all infrastructure components are orchestrated.
+. Search for `app-of-apps`, then click the **`app-of-apps`** to see the dependency graph. This shows how all of the workshop's underlying infrastructure components are orchestrated for you.
 +
 NOTE: You have **read-only** access to the `default` project in Argo CD. You can view but not modify any infrastructure Applications that we've pre-deployed. By letting you view these, you can see that we're not just telling you to use GitOps -- we use it too!
 

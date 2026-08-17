@@ -46,7 +46,9 @@ to:
 overlays/03-catalog-entities
 ----
 
-. Click **Save** and wait for the sync to complete
+. Click **Save** and wait for the sync to complete, and the new Pod to start. 
+
+While you wait, take a look at the new block of YAML that instructs Developer Hub to load entities. The specific change is in `overlays/03-catalog-entities/configmap-app-config-catalog.yaml` in the `ocp-pe-wkshp-rhdh-configs` repository in GitLab.
 
 === Verify
 
@@ -88,19 +90,19 @@ Developer Hub is now importing entities from Parasol's GitLab repositories. It m
 
 == What changed?
 
-The only difference between this overlay and the previous one is the `catalog.locations` section in the app-config:
+The only difference between this overlay and the previous one is a new `catalog.locations` entry in the app-config pointing at a single catalog index:
 
 [source,yaml]
 ----
 catalog:
   locations:
     - type: url
-      target: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-store/blob/main/catalog-info.yaml
-    - type: url
-      target: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-store-api/blob/main/catalog-info.yaml
+      target: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/blob/main/catalog-index.yaml
+      rules:
+        - allow: [Component, System, API, Resource, Location, Domain, Group]
 ----
 
-Each location points to a `catalog-info.yaml` file in a Git repository. Developer Hub reads these files, discovers the entities defined within, and builds the catalog graph. The GitLab discovery provider (configured in the previous overlay) also scans for additional `catalog-info.yaml` files across all repositories.
+This single location points to a `catalog-index.yaml` that references all of Parasol's entity definitions -- Groups, Domains, Systems, Components, and APIs. Developer Hub reads the index, follows its targets, and builds the full catalog graph. Using an index file like this is a common pattern for managing large catalogs without listing every entity file individually.
 
 == Module summary
 

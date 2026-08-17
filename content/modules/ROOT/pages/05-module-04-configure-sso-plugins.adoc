@@ -28,7 +28,7 @@ Before you flip the switch, take a look at the pieces that have been pre-configu
 
 TIP: Red Hat Build of Keycloak is used as an identity provider in this workshop. A complete list of supported identity providers can be found in the https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.10/html/authentication_in_red_hat_developer_hub/index[Developer Hub documentation].
 
-. Open the **Keycloak** tab
+. Select the **Keycloak** tab on the right.
 
 . Log in to the Keycloak admin console. Retrieve the admin credentials from the terminal (see the xref:00-credentials.adoc[Credentials and URLs] page for the commands):
 +
@@ -38,16 +38,21 @@ oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.username}' 
 oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.password}' | base64 -d && echo
 ----
 
-. In the top-left dropdown, select the **backstage** realm. This realm has been pre-configured with:
+. Expand the sidemenu. In the top-left dropdown, select the **backstage** realm. This realm has been pre-configured with:
 +
 * **Users and groups** -- The same `dev1`, `dev2`, `pe1`, and `pe2` users you've used throughout the workshop, organised into `developers` and `platformengineers` groups
 * **Clients** -- A `backstage` client configured for OIDC authentication with Developer Hub
 
-. Click **Clients** in the left sidebar and select **backstage**. Note the *Client ID* (`backstage`) -- Developer Hub will use this to authenticate users via OIDC. The client secret is stored in Vault, not here in the UI.
+. Click **Clients** in the left sidebar and select **backstage**. Note the *Client ID* (`backstage`) -- Developer Hub will use this to authenticate users via OIDC. The client secret is stored in Vault, not here in the UI. Also note that we've pre-configured origins, redirect URIs, and such for you ahead of time.
 
 === Vault: the credentials
 
-. Open the **Vault** tab and log in if prompted (use the token method from Module 4)
+. Open the **Vault** tab and log in with the *Token* method. Retrieve your Vault root token from the terminal:
++
+[source,bash,role="copypaste",subs="attributes+"]
+----
+oc get secret vault-token -n vault -o jsonpath='{.data.token}' | base64 -d && echo
+----
 
 . Navigate to `kv` > `secrets/` > `keycloak/` > `client-secret`
 +
@@ -145,6 +150,16 @@ Open the **Argo CD** tab and click into the `developer-hub` Application:
 == Exercise 2: Log in with SSO
 
 Developer Hub is now configured with Keycloak OIDC authentication. Guest access is disabled.
+
+[NOTE]
+====
+You'll need to wait until the new Pod in your `developer-hub` Argo CD Application has finished rolling out. Use the following command to observe and wait for a successful rollout:
+
+[source,bash,role="copypaste",subs="attributes+"]
+----
+oc rollout status deployment/backstage-developer-hub -n rhdh
+----
+====
 
 . Open the **Developer Hub** tab and click the refresh icon at the top
 
