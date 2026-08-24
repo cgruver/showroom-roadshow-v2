@@ -38,9 +38,9 @@ These three files are all you need to deploy and start customizing your internal
 
 === About Kustomize
 
-This workshop uses link:https://kustomize.io[Kustomize] to to manage layering configuration progressively (https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays[via overlays]) to enhance your internal developer portal. Argo CD supports both Kustomize and link:https://helm.sh[Helm] for rendering Kubernetes manifests, allowing us to use a set of base manifests and apply overrides per environment or - in the case of this workshop - module. We've chosen this approach to demonstrate progressively enhancing the Developer Hub deployment.
+This workshop uses link:https://kustomize.io[Kustomize] https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays[overlays] to manage the layers of configuration that construct and enhance your internal developer portal. Argo CD supports both Kustomize and link:https://helm.sh[Helm] for rendering Kubernetes manifests, allowing us to use a set of base manifests to which we apply overrides per environment or per workshop module. We chose this approach to illustrate progressive enhancement of a Developer Hub deployment.
 
-The _kustomization.yaml_ is a file used by https://kustomize.io/[Kustomize] to "render" your configuration files. This becomes more powerful in later modules as we layer in additional configuration properties and files.
+https://kustomize.io/[Kustomize] uses the declarations in the _kustomization.yaml_ file to "render" your configuration files. This becomes more powerful in later modules as we layer on additional configuration properties and files.
 
 Preview the Kustomize output in the terminal using the following commands:
 
@@ -107,9 +107,9 @@ In the Argo CD Application view, you should see:
 * Four resources deployed: 1 Backstage CR, 2 ConfigMaps, 1 PVC
 * Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol.
 
-NOTE: It can take a few minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
+NOTE: It can take a few minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs you can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
 
-== Exercise 2: Access Developer Hub
+== Exercise 3: Access Developer Hub
 
 Once the Operator has created the deployment and the Pod is ready, Developer Hub will be accessible via a Route.
 

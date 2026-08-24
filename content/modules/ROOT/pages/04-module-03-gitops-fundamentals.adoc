@@ -79,7 +79,7 @@ Argo CD can apply a directory of plain manifests directly. Tools such as Helm an
 
 == Exercise 2: Create an Argo CD Application
 
-Now you'll instruct Argo CD to deploy these manifests by creating an https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications[Application CR]. An Application CR allows you to define the parameters used to control how Argo CD manages the underlying resources. For example, you could disable **Self Healing** so that Argo CD will not make any changes when a resource is modified on the underlying cluster causing it to differ from the manifest in Git -- this setting often disabled during development or debugging.
+Now you'll instruct Argo CD to deploy these manifests by creating an https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications[Application CR]. An Application CR allows you to define the parameters used to control how Argo CD manages the underlying resources. For example, you could disable **Self Healing** so that Argo CD will not make any changes when a resource is modified on the underlying cluster causing it to differ from the manifest in Git -- this setting is often disabled during development or debugging.
 
 . Open the **Argo CD** tab and log in if prompted:
 +

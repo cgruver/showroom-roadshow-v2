@@ -58,7 +58,7 @@ oc get secret vault-token -n vault -o jsonpath='{.data.token}' | base64 -d && ec
 +
 You'll see the `clientId` and `clientSecret` values that Developer Hub needs to connect to Keycloak. These are the same credentials referenced by the `backstage` client you just saw in Keycloak. 
 
-The workshop has pre-populated the credentials in Vault to save time, but a platform team will typically add them to Vault as necessarry.
+The workshop has pre-populated the credentials in Vault to save time, but a platform team will typically add them to Vault as necessary.
 
 === ExternalSecrets: the bridge
 
