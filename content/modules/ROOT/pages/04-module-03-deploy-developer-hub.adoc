@@ -47,7 +47,7 @@ Preview the Kustomize output in the terminal using the following commands:
 [source,bash,role="copypaste",subs="attributes+"]
 ----
 git clone https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs
-oc kustomize build ocp-pe-wkshp-rhdh-configs/base
+oc kustomize ocp-pe-wkshp-rhdh-configs/base
 ----
 
 These rendered files could be applied to the cluster using the `oc apply` or `kubectl apply` CLI commands, but in your case Argo CD will take care of that.
