@@ -206,13 +206,6 @@ oc get application developer-hub -n openshift-gitops -w
 +
 Press `Ctrl+C` once the `SYNC STATUS` shows `Synced` and `HEALTH STATUS` shows `Healthy`.
 +
-The new resources include:
-+
-* 5 ExternalSecrets (the ones you reviewed in Exercise 0)
-* 1 PersistentVolumeClaim for caching dynamic plugins (making future Pod rollouts faster)
-* 1 Secret for the npm registry
-* Updated ConfigMaps for app-config and dynamic plugins
-* Updated Backstage CR with secret references
 
 === Verify
 
@@ -263,10 +256,16 @@ You'll see quick links to DevSpaces, GitLab, and Quay -- the platform tools your
 +
 * **Keycloak user sync** -- Developer Hub is importing users and groups from Keycloak automatically. The `dev1`, `dev2`, `pe1`, and `pe2` users and their groups (`developers`, `platformengineers`) should be visible as catalog entities.
 
-. The Component catalog is still empty -- you haven't registered any services yet. But the remaining integrations are active and ready:
+. Navigate to **Catalog** and switch the **Kind** filter to **Component**. You should see the **parasol-insurance** component appear:
 +
-* **GitLab discovery** -- Developer Hub is scanning GitLab for repositories containing `catalog-info.yaml` files (it won't find any yet).
-* **Argo CD and Tekton plugins** -- Ready to display CI/CD data once catalog entities are registered.
+* **GitLab discovery** -- Developer Hub has automatically discovered the parasol-insurance repository which contains a `catalog-info.yaml` file
+* **Rich integration data** -- Click into the parasol-insurance component to explore:
+** **Overview tab** -- Shows JIRA issues related to the component (the JIRA integration you just enabled)
+** **CI tab** -- Displays recent OpenShift Pipelines (Tekton) runs
+** **Topology tab** -- Shows running pods and Kubernetes resources
+** **Kubernetes tab** -- Lists all related Kubernetes objects (Deployments, Services, Routes)
++
+NOTE: The Overview tab shows a warning "This entity has relations to other entities, which can't be found in the catalog." This is expected -- parasol-insurance references related components and APIs that haven't been registered yet. You'll resolve this in the next module when you populate the full catalog.
 
 . Navigate to **Settings** and confirm your user identity is shown -- this is your Keycloak profile, synced into Developer Hub.
 
