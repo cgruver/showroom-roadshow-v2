@@ -60,6 +60,41 @@ NOTE: We've done the prerequisite work for you here. The key focus of this works
 
 Before you flip the switch, take a look at the pieces that have been pre-configured for this module. You've already seen Vault in Module 4 -- now you'll see the Keycloak side and understand how they connect to Developer Hub through ExternalSecrets.
 
+=== How the pieces connect
+
+The following diagram shows how credentials flow from Vault to Developer Hub:
+
+[mermaid,svg,width=90%]
+----
+graph TB
+    V[Vault<br/>Secrets Backend] --> VS[secrets/keycloak/<br/>client-secret]
+
+    ES[ExternalSecret CR<br/>oauth-client] -.->|references path| VS
+    ES -->|External Secrets Operator<br/>reads from Vault| V
+
+    ES -->|creates| K8S[Kubernetes Secret<br/>oauth-client]
+
+    K8S -->|mounted as<br/>environment vars| RHDH[Developer Hub Pod]
+    KC[Keycloak<br/>backstage realm] <-->|OIDC authentication<br/>using client credentials| RHDH
+
+    style V fill:#326ce5,stroke:#fff,stroke-width:3px,color:#fff,font-size:16px
+    style VS fill:#5b8fc5,stroke:#fff,stroke-width:2px,color:#fff,font-size:14px
+    style KC fill:#4d4d4d,stroke:#fff,stroke-width:3px,color:#fff,font-size:16px
+    style ES fill:#f59300,stroke:#fff,stroke-width:3px,color:#fff,font-size:16px
+    style K8S fill:#326ce5,stroke:#fff,stroke-width:3px,color:#fff,font-size:16px
+    style RHDH fill:#ee0000,stroke:#fff,stroke-width:3px,color:#fff,font-size:16px
+----
+
+Key points:
+
+* **Vault** (top) is the single source of truth -- all credentials stored at specific paths
+* **ExternalSecret CR** references the Vault path but contains no secrets itself
+* **External Secrets Operator** reads from Vault and automatically creates Kubernetes Secrets
+* **Developer Hub** consumes the Kubernetes Secret (mounted as environment variables)
+* **Keycloak** authenticates users via OIDC using the credentials from the Secret
+
+This same pattern is used for all five secrets in this overlay: Keycloak OIDC, GitLab tokens, Argo CD passwords, Kubernetes service account tokens, and backend secrets.
+
 
 === Keycloak: the identity provider
 
@@ -71,8 +106,10 @@ TIP: Red Hat Build of Keycloak is used as an identity provider in this workshop.
 +
 [source,bash,role="execute",subs="attributes+"]
 ----
-oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.username}' | base64 -d && echo
-oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.password}' | base64 -d && echo
+KC_USER=$(oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.username}' | base64 -d)
+KC_PASS=$(oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.password}' | base64 -d)
+echo "Username: $KC_USER"
+echo "Password: $KC_PASS"
 ----
 
 . Expand the sidemenu. In the top-left dropdown, select the **backstage** realm. This realm has been pre-configured with:
@@ -88,7 +125,8 @@ oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.password}' 
 +
 [source,bash,role="execute",subs="attributes+"]
 ----
-oc get secret vault-token -n vault -o jsonpath='{.data.token}' | base64 -d && echo
+VAULT_TOKEN=$(oc get secret vault-token -n vault -o jsonpath='{.data.token}' | base64 -d)
+echo "Token: $VAULT_TOKEN"
 ----
 
 . Navigate to `kv` > `secrets/` > `keycloak/` > `client-secret`
