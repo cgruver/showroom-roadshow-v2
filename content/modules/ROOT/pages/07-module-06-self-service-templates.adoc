@@ -9,6 +9,43 @@ Software templates are the golden paths of platform engineering. They encode you
 
 In this module, you'll import a template and see how developers can create production-ready applications in minutes.
 
+[IMPORTANT]
+====
+**Skipped the previous modules?** If you didn't complete the "Populate the Software Catalog" module, you can fast-forward to this module's starting state by running:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: developer-hub
+  namespace: openshift-gitops
+spec:
+  project: pe-workshop
+  source:
+    repoURL: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git
+    targetRevision: main
+    path: overlays/03-catalog-entities
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rhdh
+  syncPolicy:
+    automated:
+      selfHeal: true
+EOF
+----
+
+Wait for the Application to sync and the Pod to become healthy before continuing:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+oc get pods -n rhdh -w
+----
+
+Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
+====
+
 == Learning objectives
 
 By the end of this module, you'll be able to:

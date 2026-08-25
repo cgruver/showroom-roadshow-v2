@@ -7,6 +7,43 @@ A developer portal is only as useful as the information it contains. Right now, 
 
 In this module, you'll switch to the next overlay to register Parasol's existing services in the software catalog, making them discoverable to every developer in the organisation.
 
+[IMPORTANT]
+====
+**Skipped the previous modules?** If you didn't complete the "Configure SSO and Plugins" module, you can fast-forward to this module's starting state by running:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: developer-hub
+  namespace: openshift-gitops
+spec:
+  project: pe-workshop
+  source:
+    repoURL: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git
+    targetRevision: main
+    path: overlays/02-sso-plugins
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rhdh
+  syncPolicy:
+    automated:
+      selfHeal: true
+EOF
+----
+
+Wait for the Application to sync and the Pod to become healthy before continuing:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+oc get pods -n rhdh -w
+----
+
+Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
+====
+
 == Learning objectives
 
 By the end of this module, you'll be able to:
@@ -26,7 +63,9 @@ Before registering entities, it's worth understanding how the catalog organises 
 * **Resource** -- Infrastructure dependencies (databases, queues, clusters)
 * **Domain** -- A business area that owns systems
 
-Each entity is defined in a `catalog-info.yaml` file that lives alongside the source code. Developer Hub reads these files and builds the catalog graph.
+Each entity is defined in a `catalog-info.yaml` file that typically lives alongside the source code. The team that owns a component is responsible for maintaining its `catalog-info.yaml` -- just like they maintain the code itself. Developer Hub reads these files and builds the catalog graph.
+
+Not every entity needs a hand-crafted YAML file, though. Integrations like the GitLab discovery provider (which you enabled in the previous module) can scan repositories and auto-register any `catalog-info.yaml` files they find. Other providers go further -- the Keycloak provider you configured automatically imports users and groups from your identity provider, and CI/CD integrations can surface pipeline and deployment data without any catalog changes at all.
 
 == Exercise 1: Switch to the catalog entities overlay
 
@@ -34,13 +73,7 @@ The `overlays/03-catalog-entities/` overlay adds `catalog.locations` entries to 
 
 . In the **Argo CD** tab, click on your **developer-hub** Application
 
-. Click **App Details** and change the **Path** from:
-+
-----
-overlays/02-sso-plugins
-----
-+
-to:
+. Click **App Details** and change the **Path** to:
 +
 ----
 overlays/03-catalog-entities

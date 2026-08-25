@@ -163,7 +163,7 @@ The status should change from **OutOfSync** to **Synced**, and the health should
 * Clicking the Route resource in Argo CD and checking the **Host** field, or
 * Running the following command in the terminal:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get route sample-app -n prerequisite-samples -o jsonpath='https://{.spec.host}{"\n"}'
 ----
@@ -214,14 +214,14 @@ In a production environment, this simulates someone making an ad-hoc change via 
 
 . In the **Terminal** tab, scale the deployment directly on the cluster:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc scale deployment/sample-app -n prerequisite-samples --replicas=3
 ----
 
 . Verify the cluster now has 3 pods running:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get pods -n prerequisite-samples -l app=sample-app
 ----
@@ -240,7 +240,7 @@ Argo CD scales the Deployment back down to 2 replicas -- the number defined in G
 
 . Verify with the CLI:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get pods -n prerequisite-samples -l app=sample-app
 ----
@@ -261,13 +261,13 @@ Although you've been using the Argo CD UI, an Argo CD Application is just a Kube
 
 . In the **Terminal** tab, view the Application resource:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get application sample-app -n openshift-gitops
 ----
 . Delete it:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc delete application sample-app -n openshift-gitops
 ----
@@ -278,7 +278,7 @@ Argo CD will remove the Application _and_ the resources it manages (Deployment, 
 
 . Verify the managed resources are gone:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get deployment,service,route -n prerequisite-samples -l app=sample-app
 ----

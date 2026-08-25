@@ -9,6 +9,43 @@ Red Hat Developer Hub Lightspeed provides an AI assistant built into the portal.
 
 In this module, you'll enable Lightspeed as the final piece of Parasol's IDP.
 
+[IMPORTANT]
+====
+**Skipped the previous modules?** If you didn't complete the "Enable Self-Service with Templates" module, you can fast-forward to this module's starting state by running:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: developer-hub
+  namespace: openshift-gitops
+spec:
+  project: pe-workshop
+  source:
+    repoURL: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git
+    targetRevision: main
+    path: overlays/04-templates
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rhdh
+  syncPolicy:
+    automated:
+      selfHeal: true
+EOF
+----
+
+Wait for the Application to sync and the Pod to become healthy before continuing:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+oc get pods -n rhdh -w
+----
+
+Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
+====
+
 == Learning objectives
 
 By the end of this module, you'll be able to:

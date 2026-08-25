@@ -22,6 +22,8 @@ By the end of this module, you'll be able to:
 
 A repository containing a basic set of configuration files has been pre-created for you - take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git[rhdh/ocp-pe-wkshp-rhdh-configs GitLab repository].
 
+NOTE: If prompted to log in to GitLab, use username `pe1` and password `{common_password}`.
+
 image::m3/gitlab-files.png[Configuration base files in GitLab,link=self,window=blank,align="center",width=700,title=GitLab: A set of base configuration files for you Red Hat Developer Hub deployment]
 
 The *base/* folder contains files that are used to configure an instance of Red Hat Developer Hub, plus a _kustomization.yaml_ file - more on that last one later:
@@ -44,13 +46,13 @@ https://kustomize.io/[Kustomize] uses the declarations in the _kustomization.yam
 
 Preview the Kustomize output in the terminal using the following commands:
 
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 git clone https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs
 oc kustomize ocp-pe-wkshp-rhdh-configs/base
 ----
 
-These rendered files could be applied to the cluster using the `oc apply` or `kubectl apply` CLI commands, but in your case Argo CD will take care of that.
+These rendered files could be applied to the cluster using `oc apply -k`, but in your case Argo CD will take care of that.
 
 == Exercise 2: Create the Argo CD Application
 
@@ -58,7 +60,7 @@ You'll deploy Developer Hub by creating an Argo CD Application that initially po
 
 . In the **Terminal** tab, create the Argo CD Application:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 cat <<'EOF' | oc apply -f -
 apiVersion: argoproj.io/v1alpha1

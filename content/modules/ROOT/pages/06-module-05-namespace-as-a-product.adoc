@@ -64,7 +64,7 @@ In Module 3, you created Argo CD Applications using the UI. This time, you'll us
 
 . In the **Terminal** tab, create the Argo CD Application:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 cat <<'EOF' | oc apply -f -
 apiVersion: argoproj.io/v1alpha1
@@ -93,7 +93,7 @@ NOTE: This time you're using `automated` sync with `selfHeal: true`. The platfor
 
 . Verify the Application is synced:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get application managed-namespace -n openshift-gitops
 ----
@@ -102,7 +102,7 @@ The `SYNC STATUS` should show `Synced` and `HEALTH STATUS` should show `Healthy`
 
 . Confirm the resources were created:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get resourcequota,limitrange,rolebinding,networkpolicy -n dev-team-alpha
 ----
@@ -210,14 +210,14 @@ You can now close the private browser window.
 
 Remove the managed namespace Application.
 
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc delete application managed-namespace -n openshift-gitops
 ----
 
 Verify the namespace and all its resources are gone:
 
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get namespace dev-team-alpha
 ----

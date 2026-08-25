@@ -17,6 +17,43 @@ By the end of this module, you'll be able to:
 
 You'll also see how Kustomize overlays let you layer these additions on top of the base configuration without modifying the original files - this is just a little bonus learning, but isn't required when you embark on your own IDP journey.
 
+[IMPORTANT]
+====
+**Skipped the previous modules?** If you didn't complete the "Deploy Developer Hub" module, you can fast-forward to this module's starting state by running:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+cat <<'EOF' | oc apply -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: developer-hub
+  namespace: openshift-gitops
+spec:
+  project: pe-workshop
+  source:
+    repoURL: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git
+    targetRevision: main
+    path: base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rhdh
+  syncPolicy:
+    automated:
+      selfHeal: true
+EOF
+----
+
+Wait for the Application to sync and the Pod to become healthy before continuing:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+oc get pods -n rhdh -w
+----
+
+Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
+====
+
 == Exercise 0: Vault, Keycloak, and External Secrets
 
 NOTE: We've done the prerequisite work for you here. The key focus of this workshop is to learn the high-level configuration steps and understand the benefit you can provide to developer teams with Red Hat Developer Hub. You'll leave this workshop with an excellent template to start building out your own internal developer portal.
@@ -32,7 +69,7 @@ TIP: Red Hat Build of Keycloak is used as an identity provider in this workshop.
 
 . Log in to the Keycloak admin console. Retrieve the admin credentials from the terminal (see the xref:00-credentials.adoc[Credentials and URLs] page for the commands):
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.username}' | base64 -d && echo
 oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.password}' | base64 -d && echo
@@ -49,7 +86,7 @@ oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.password}' 
 
 . Open the **Vault** tab and log in with the *Token* method. Retrieve your Vault root token from the terminal:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get secret vault-token -n vault -o jsonpath='{.data.token}' | base64 -d && echo
 ----
@@ -108,7 +145,7 @@ You'll update the Argo CD Application using `oc patch` from the terminal -- the 
 
 . In the **Terminal** tab, verify the current Application configuration:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get application developer-hub -n openshift-gitops -o jsonpath='{.spec.source.path}{"\n"}'
 ----
@@ -117,14 +154,14 @@ You should see `base` -- the current overlay.
 
 . Patch the Application to point at the new overlay:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc patch application developer-hub -n openshift-gitops --type merge -p '{"spec":{"source":{"path":"overlays/02-sso-plugins"}}}'
 ----
 
 . Watch the sync progress. Argo CD will detect the path change and begin syncing new resources:
 +
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc get application developer-hub -n openshift-gitops -w
 ----
@@ -155,7 +192,7 @@ Developer Hub is now configured with Keycloak OIDC authentication. Guest access 
 ====
 You'll need to wait until the new Pod in your `developer-hub` Argo CD Application has finished rolling out. Use the following command to observe and wait for a successful rollout:
 
-[source,bash,role="copypaste",subs="attributes+"]
+[source,bash,role="execute",subs="attributes+"]
 ----
 oc rollout status deployment/backstage-developer-hub -n rhdh
 ----
