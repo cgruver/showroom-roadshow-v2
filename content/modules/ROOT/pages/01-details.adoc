@@ -29,3 +29,14 @@ NOTE: The same credentials work for OpenShift, Argo CD (via OpenShift OAuth), Ke
 == How you'll work
 
 You will use a GitOps-driven configuration approach. This means you'll use OpenShift GitOps to deploy and manage platform components. Don't worry if this is new to you -- it'll be explained as you follow the content. It essentially boils down to a set of YAML files in a Git repository being continuously reconciled against OpenShift. We're taking a production-like approach in this workshop!
+
+=== Executable terminal commands
+
+Throughout the workshop, you'll see command snippets with a play icon (▶) in the top-right corner. Click the icon to automatically execute the command in the Wetty terminal tab. Try it now:
+
+[source,bash,role="execute"]
+----
+oc version --client
+----
+
+This should display your OpenShift CLI version. You can also copy commands and paste them manually, but the play button makes it faster!
