@@ -27,7 +27,7 @@ NOTE: These specific tools are used in this workshop, but the concepts apply reg
 * Username: `pe1`
 * Password: `{common_password}`
 
-. Navigate to **Ecosystem > Installed Operators** using the left-hand and verify the following are installed:
+. Navigate to **Ecosystem > Installed Operators** using the left-hand menu and verify the following are installed:
 +
 * **Red Hat OpenShift GitOps** -- Argo CD for declarative deployments
 * **Red Hat OpenShift Pipelines** -- Tekton for CI/CD pipelines
