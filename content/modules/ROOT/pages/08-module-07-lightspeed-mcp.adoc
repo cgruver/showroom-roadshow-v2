@@ -43,7 +43,9 @@ Wait for the Application to sync and the Pod to become healthy before continuing
 oc get pods -n rhdh -w
 ----
 
-Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
+Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready. The pod starting with `backstage-developer-hub` may take a few minutes to become ready on first deployment.
+
+Once the pod is ready, click the **Developer Hub** tab and log in with username `pe1` and password `{common_password}` to confirm it's working.
 ====
 
 == Learning objectives
@@ -66,7 +68,7 @@ The `overlays/05-lightspeed/` overlay adds:
 
 . In the **Argo CD** tab, click on your **developer-hub** Application
 
-. Click **App Details** and change the **Path** from:
+. Click **Details**, switch to the **Manifest** tab in the overlay that appears, and click **Edit**. Change the **Path** from:
 +
 ----
 overlays/04-templates
