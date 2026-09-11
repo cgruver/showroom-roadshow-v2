@@ -1,15 +1,15 @@
-= Module 5: Populate the software catalog
+= Module 5: Map Parasol's Software Architecture
 :source-highlighter: rouge
 :toc: macro
 :toclevels: 1
 
 A developer portal is only as useful as the information it contains. Right now, Developer Hub is connected to the platform but the catalog is empty. Parasol's developers can't discover services, APIs, or documentation because nobody has registered them.
 
-In this module, you'll switch to the next overlay to register Parasol's existing services in the software catalog, making them discoverable to every developer in the organisation.
+In this module, you'll register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable map of the entire software landscape.
 
 [IMPORTANT]
 ====
-**Skipped the previous modules?** If you didn't complete the "Configure SSO and Plugins" module, you can fast-forward to this module's starting state by running:
+**Skipped the previous modules?** If you didn't complete the previous module, you can fast-forward to this module's starting state by running:
 
 [source,bash,role="execute",subs="attributes+"]
 ----
@@ -48,10 +48,11 @@ Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
 
 By the end of this module, you'll be able to:
 
-* Understand the Backstage entity model (Components, Systems, APIs, Resources)
+* Understand the Backstage entity model (Components, Systems, APIs, Resources, Domains)
 * Register catalog entities by adding location URLs to the app-config
-* Navigate the software catalog to discover services and their relationships
-* See how catalog entities connect to CI/CD, topology, and documentation
+* Visualize system architecture using System Diagrams and relationship graphs
+* Navigate domain documentation (including compliance information) through the catalog
+* Understand how the catalog serves as both a human-facing portal and a machine-readable knowledge graph for AI agents
 
 == The Backstage entity model
 
@@ -69,57 +70,98 @@ Not every entity needs a hand-crafted YAML file, though. Integrations like the G
 
 == Exercise 1: Switch to the catalog entities overlay
 
-The `overlays/03-catalog-entities/` overlay adds `catalog.locations` entries to the app-config, pointing Developer Hub at Parasol's existing repositories.
+The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-entities[`overlays/03-catalog-entities/`,window=_blank] overlay adds a new ConfigMap that merges `catalog.locations` entries into the app-config, pointing Developer Hub at Parasol's existing repositories.
 
 . In the **Argo CD** tab, click on your **developer-hub** Application
 
-. Click **App Details** and change the **Path** to:
+. Click **Details**, then **Manifest**, and enable **Edit** mode to change the **Path** to:
 +
 ----
 overlays/03-catalog-entities
 ----
 
-. Click **Save** and wait for the sync to complete, and the new Pod to start. 
+. Click **Save** and Argo CD will rollout a new version of Red Hat Developer Hub using the new overlay.
 
-While you wait, take a look at the new block of YAML that instructs Developer Hub to load entities. The specific change is in `overlays/03-catalog-entities/configmap-app-config-catalog.yaml` in the `ocp-pe-wkshp-rhdh-configs` repository in GitLab.
+While you wait, take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/03-catalog-entities/configmap-app-config-catalog.yaml[new ConfigMap,window=_blank] that instructs Developer Hub to load entities. The ConfigMap adds a `catalog.locations` block pointing at Parasol's catalog index, which references all of Parasol's entity definitions.
 
 === Verify
 
 * Sync status: **Synced**
 * Health status: **Healthy**
-* The resource count remains the same (only the app-config ConfigMap content changed)
 
 == Exercise 2: Explore the catalog
 
-Developer Hub is now importing entities from Parasol's GitLab repositories. It may take 1-2 minutes for the initial catalog sync to complete.
+Developer Hub is now importing a set of entities from Parasol's GitLab repositories. These entities have been crafted to represent Parasol's existing software architecture, business domains, and resources.
 
-. Open the **Developer Hub** tab and navigate to the **Catalog** page
+[NOTE]
+====
+You'll need to wait until the new Pod in your `developer-hub` Argo CD Application has finished rolling out. Use the following command to observe and wait for a successful rollout:
 
-. You should see Parasol's entities appearing:
+[source,bash,role="execute",subs="attributes+"]
+----
+oc rollout status deployment/backstage-developer-hub -n rhdh
+----
+====
+
+. Open the **Developer Hub** tab and click the refresh icon at the top
+
+. Navigate to the **Catalog** page
+
+. You should see Parasol's entities appearing. Use the **Kind** dropdown filter and select **System** to view system-level entities
+
+. Click on the **API Gateway System** to open its details page
+
+. Click the **System Diagram** button (near the top of the page)
 +
-* Components representing services (e.g., Parasol Store)
-* APIs representing interfaces (e.g., Parasol Store API)
-
-. Click on a **Component** to explore its details:
+This diagram visualizes Parasol's software architecture at scale. Each box represents a Component (service), and the lines show API dependencies between them. You're seeing the entity definitions you just imported -- Domains, Systems, Components, APIs, and Resources -- rendered as an interactive graph.
 +
-* **Overview** -- Ownership, lifecycle, system membership
-* **CI/CD** -- Pipeline runs from Tekton (if pipelines have run)
-* **Topology** -- Kubernetes deployment view showing pods, services, and routes
-* **Dependencies** -- How this component connects to APIs and other components
-
-. Click on an **API** to see its details:
+Notice how the diagram shows:
 +
-* API type and specification
-* Which components consume or provide this API
+* **Components** grouped into their parent System
+* **API relationships** showing which services talk to each other
+* **Resource dependencies** like databases and message queues
 
-. Use the **search bar** to find a specific service by name
+. Click **View Graph** (at the top right of the diagram)
++
+This opens the full relationship graph with additional depth. You can:
++
+* **Zoom and pan** to explore the full topology
+* **Click nodes** to see entity details
+* **Trace dependencies** across multiple levels (e.g., which APIs a component uses, which resources those APIs depend on)
++
+This is the catalog's power: it doesn't just list services, it models the relationships between them. When a developer asks "what does the Billing service depend on?", the graph shows the answer immediately.
+
+. Close the graph view and return to the **Catalog** page
+
+. Click **Docs** in the left navigation bar
+
+. Click on **Billing & Payments** in the documentation index
++
+You're now viewing domain-level documentation that lives alongside the catalog entities. This includes:
++
+* **Architecture decision records (ADRs)** explaining why the Billing system is structured this way
+* **PCI-DSS compliance information** documenting how payment data is handled securely
+* **Onboarding guides** for developers joining the Billing team
++
+Notice that this documentation is discoverable through the same interface developers use to find services and APIs. It's not buried in Confluence or a wiki -- it's registered in the catalog alongside the code.
+
+[IMPORTANT]
+====
+**AI context, not just human context**
+
+This catalog isn't just for humans browsing Developer Hub. In future modules, you'll see how this structured knowledge becomes AI context accessible via the Model Context Protocol (MCP).
+
+When a developer asks an AI assistant "How does Parasol handle PCI compliance?", the assistant can query the catalog via MCP, retrieve the Billing & Payments documentation, and answer with authoritative, up-to-date information. The same graph relationships you just explored visually can be traversed programmatically by agents to understand system dependencies, trace API calls, or suggest which teams to contact for a feature request.
+
+The catalog is a **machine-readable knowledge graph** as much as it is a developer portal.
+====
 
 === Verify
 
-* The Catalog page shows Parasol's entities
-* Clicking a Component shows the detail tabs (Overview, CI/CD, Topology)
-* The Topology tab shows Kubernetes resources for deployed components
-* APIs are linked to their providing and consuming Components
+* The Catalog page shows Parasol's Systems, Components, and APIs
+* The API Gateway System diagram visualizes component relationships
+* The View Graph feature shows deeper dependency trees
+* The Docs page includes Billing & Payments documentation with PCI-DSS compliance information
 
 == What changed?
 
@@ -139,17 +181,34 @@ This single location points to a `catalog-index.yaml` that references all of Par
 
 == Module summary
 
-The software catalog is now populated with Parasol's services and APIs.
+The software catalog is now populated with Parasol's architecture -- Systems, Components, APIs, Resources, and documentation.
 
 **What you accomplished:**
 
 * Registered catalog entities by adding location URLs to the app-config
-* Explored the software catalog and its entity relationships
-* Saw CI/CD and topology data connected to catalog entities
-* Experienced the developer's view of service discovery
+* Explored the System Diagram to visualize Parasol's architecture at scale
+* Used the relationship graph to trace dependencies across multiple levels
+* Discovered domain documentation (Billing & Payments) including PCI-DSS compliance information
+* Understood how the catalog serves as both a human-facing portal and a machine-readable knowledge graph
 
 **Key takeaway:**
-The software catalog is the foundation of the developer experience. Once entities are registered, every integration (CI/CD, topology, documentation) connects to them automatically. Developers can discover services without filing tickets or reading wikis.
+
+The software catalog is more than a service registry -- it's a **knowledge graph** that models your entire software landscape. Systems, components, APIs, resources, teams, and documentation are all connected in a queryable structure.
+
+For humans, this means:
+
+* **Instant discovery** -- find services, APIs, and docs without filing tickets
+* **Visual architecture** -- understand system dependencies through diagrams
+* **Integrated information** -- CI/CD status, topology, and documentation in one place
+
+For AI agents (coming in Module 7), this means:
+
+* **Programmatic access** via MCP to query catalog entities
+* **Contextual answers** grounded in authoritative, up-to-date documentation
+* **Relationship traversal** to answer questions like "what depends on this API?" or "which team owns the Billing service?"
+
+The catalog isn't just documentation -- it's **operational intelligence** accessible to both humans and machines.
 
 **Next steps:**
-In Module 6, you'll import a golden-path software template that lets developers create new applications with pre-configured CI/CD pipelines -- self-service at its best.
+
+In Module 6, you'll import a golden-path software template that lets developers create new applications with pre-configured CI/CD pipelines, security gates, and automatic catalog registration -- self-service at its best.

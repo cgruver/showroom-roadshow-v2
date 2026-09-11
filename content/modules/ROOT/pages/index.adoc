@@ -25,8 +25,8 @@ You'll progressively build Parasol's IDP using a GitOps-driven approach:
 
 . **Explore the application platform** -- See the OpenShift capabilities that form the foundation
 . **Deploy Developer Hub** -- Use Argo CD to deploy a minimal instance from a Backstage custom resource
-. **Configure SSO and plugins** -- Add authentication, CI/CD visibility, and topology plugins
-. **Populate the software catalog** -- Register Parasol's services and APIs
+. **Connect Developer Hub to the platform** -- Add authentication, CI/CD visibility, and topology plugins
+. **Map Parasol's software architecture** -- Register Parasol's services, systems, and APIs in the catalog
 . **Enable self-service templates** -- Import golden-path templates for application creation
 . **Add AI assistance** -- Enable Lightspeed with MCP for catalog-aware AI
 

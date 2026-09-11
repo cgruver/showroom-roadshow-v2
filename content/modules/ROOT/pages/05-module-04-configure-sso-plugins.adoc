@@ -1,19 +1,42 @@
-= Module 7: Configure SSO and plugins
+= Module 4: Connect Developer Hub to the Platform
 :source-highlighter: rouge
 :toc: macro
 :toclevels: 1
 
 A developer portal with guest authentication and no integrations isn't very useful. Parasol's developers need to log in with their corporate identity and see their CI/CD pipelines, deployment topology, and application status -- all without leaving the portal.
 
-In this module, you'll configure Developer Hub with SSO authentication, platform integrations, and dynamic plugins -- transforming it from a blank canvas into a connected portal.
+In this module, you'll connect Developer Hub to the platform by configuring SSO authentication, enabling dynamic plugins, and integrating with platform services -- transforming it from a blank canvas into a connected portal.
+
+[mermaid,svg,width=80%]
+----
+graph TB
+    DEV[👤 Developer] --> RHDH[Red Hat Developer Hub<br/>Portal]
+
+    RHDH --> KC[Keycloak<br/>SSO Authentication]
+    RHDH --> GL[GitLab<br/>Source Control]
+    RHDH --> OCP[OpenShift<br/>Kubernetes API]
+    RHDH --> ARGO[Argo CD<br/>GitOps Deployments]
+
+    style DEV fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#333,font-size:16px
+    style RHDH fill:#ee0000,stroke:#fff,stroke-width:3px,color:#fff,font-size:16px
+    style KC fill:#4d4d4d,stroke:#fff,stroke-width:3px,color:#fff,font-size:14px
+    style GL fill:#fc6d26,stroke:#fff,stroke-width:3px,color:#fff,font-size:14px
+    style OCP fill:#ee0000,stroke:#fff,stroke-width:3px,color:#fff,font-size:14px
+    style ARGO fill:#ef7b4d,stroke:#fff,stroke-width:3px,color:#fff,font-size:14px
+----
+
+Once connected, developers get a unified view of their platform without switching tools or filing tickets.
+
+TIP: Red Hat Build of Keycloak is used as a stand-in for your corporate identity provider for Developer Hub in this workshop. A complete list of supported identity providers can be found in the https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.10/html/authentication_in_red_hat_developer_hub/index[Developer Hub documentation]. The same principles apply for source control, CI, CD, etc.
 
 == Learning objectives
 
 By the end of this module, you'll be able to:
 
-* Configure SSO authentication for Developer Hub using Keycloak as an OIDC provider
+* Connect Developer Hub to Keycloak for SSO authentication using OIDC
 * Enable dynamic plugins for CI/CD, GitOps, and Kubernetes integrations
 * Understand how ExternalSecrets connect Vault credentials to Developer Hub -- the same pattern you learned in Module 4, now applied at scale
+
 
 You'll also see how Kustomize overlays let you layer these additions on top of the base configuration without modifying the original files - this is just a little bonus learning, but isn't required when you embark on your own IDP journey.
 
@@ -56,11 +79,39 @@ Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready. Th
 Once the pod is ready, click the **Developer Hub** tab and log in with username `pe1` and password `{common_password}` to confirm it's working.
 ====
 
-== Exercise 0: Vault, Keycloak, and External Secrets
+== Exercise 0: Switch to the SSO and plugins overlay
 
-NOTE: We've done the prerequisite work for you here. The key focus of this workshop is to learn the high-level configuration steps and understand the benefit you can provide to developer teams with Red Hat Developer Hub. You'll leave this workshop with an excellent template to start building out your own internal developer portal.
+The `overlays/02-sso-plugins/` directory builds on the base configuration by adding:
 
-Before you flip the switch, take a look at the pieces that have been pre-configured for this module. You've already seen Vault in Module 4 -- now you'll see the Keycloak side and understand how they connect to Developer Hub through ExternalSecrets.
+* **OIDC authentication** via Keycloak -- users log in with their corporate identity
+* **Dynamic plugins** -- Tekton pipeline view, Argo CD deployment status, Kubernetes topology, GitLab integration, and a global header with links to platform tools
+* **ExternalSecrets** -- credentials for GitLab, Argo CD, and Kubernetes are pulled from Vault automatically, and used by Developer Hub plugins
+
+You'll update the Argo CD Applicatio that manages Developer Hub using `oc patch` from the terminal -- the same way a platform engineer would in automation or a script.
+
+. In the **Terminal** tab, verify the current Application configuration:
++
+[source,bash,role="execute",subs="attributes+"]
+----
+oc get application developer-hub -n openshift-gitops -o jsonpath='{.spec.source.path}{"\n"}'
+----
++
+You should see `base` -- the current overlay.
+
+. Patch the Application to point at the new overlay:
++
+[source,bash,role="execute",subs="attributes+"]
+----
+oc patch application developer-hub -n openshift-gitops --type merge -p '{"spec":{"source":{"path":"overlays/02-sso-plugins"}}}'
+----
+
+While you wait for Developer Hub to rollout the new configuration, the next section will explain the configuration you just applied.
+
+== Exercise 1: Vault, Keycloak, and External Secrets
+
+NOTE: We've done the prerequisite work of loading secret data in Vault for you. The key focus of this workshop is to learn the high-level configuration steps and understand the benefit you can provide to developer teams with Red Hat Developer Hub. You'll leave this workshop with an excellent template to start building out your own internal developer portal.
+
+Take a look at the pieces that have been pre-configured for this module. Vault was introduced in Module 4 -- now you'll see how it can be used to provide secrets required by Developer Hub's plugins and integrations through ExternalSecrets.
 
 === How the pieces connect
 
@@ -89,9 +140,9 @@ graph TB
 
 Key points:
 
-* **Vault** (top) is the single source of truth -- all credentials stored at specific paths
+* **Vault** is the single source of truth -- all credentials stored at specific paths
 * **ExternalSecret CR** references the Vault path but contains no secrets itself
-* **External Secrets Operator** reads from Vault and automatically creates Kubernetes Secrets
+* **External Secrets Operator** reads from Vault and automatically **creates Kubernetes Secrets**
 * **Developer Hub** consumes the Kubernetes Secret (mounted as environment variables)
 * **Keycloak** authenticates users via OIDC using the credentials from the Secret
 
@@ -100,11 +151,9 @@ This same pattern is used for all five secrets in this overlay: Keycloak OIDC, G
 
 === Keycloak: the identity provider
 
-TIP: Red Hat Build of Keycloak is used as an identity provider in this workshop. A complete list of supported identity providers can be found in the https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.10/html/authentication_in_red_hat_developer_hub/index[Developer Hub documentation].
-
 . Select the **Keycloak** tab on the right.
 
-. Log in to the Keycloak admin console. Retrieve the admin credentials from the terminal (see the xref:00-credentials.adoc[Credentials and URLs] page for the commands):
+. Log in to the Keycloak admin console. Retrieve the admin credentials from the terminal:
 +
 [source,bash,role="execute",subs="attributes+"]
 ----
@@ -173,50 +222,6 @@ The file contains only references -- no sensitive values.
 
 Every credential Developer Hub needs is pulled from Vault automatically. Nothing is hardcoded in Git. Rotating the credentials and updating them in Vault will result in any ExternalSecret reference also updating the Secret used by Developer Hub.
 
-== Exercise 1: Switch to the SSO and plugins overlay
-
-The `overlays/02-sso-plugins/` directory builds on the base configuration by adding:
-
-* **OIDC authentication** via Keycloak -- users log in with their corporate identity
-* **Dynamic plugins** -- Tekton pipeline view, Argo CD deployment status, Kubernetes topology, GitLab integration, and a global header with links to platform tools
-* **ExternalSecrets** -- credentials for GitLab, Argo CD, and Kubernetes are pulled from Vault automatically, and used by Developer Hub plugins
-
-You'll update the Argo CD Application using `oc patch` from the terminal -- the same way a platform engineer would in automation or a script.
-
-. In the **Terminal** tab, verify the current Application configuration:
-+
-[source,bash,role="execute",subs="attributes+"]
-----
-oc get application developer-hub -n openshift-gitops -o jsonpath='{.spec.source.path}{"\n"}'
-----
-+
-You should see `base` -- the current overlay.
-
-. Patch the Application to point at the new overlay:
-+
-[source,bash,role="execute",subs="attributes+"]
-----
-oc patch application developer-hub -n openshift-gitops --type merge -p '{"spec":{"source":{"path":"overlays/02-sso-plugins"}}}'
-----
-
-. Watch the sync progress. Argo CD will detect the path change and begin syncing new resources:
-+
-[source,bash,role="execute",subs="attributes+"]
-----
-oc get application developer-hub -n openshift-gitops -w
-----
-+
-Press `Ctrl+C` once the `SYNC STATUS` shows `Synced` and `HEALTH STATUS` shows `Healthy`.
-+
-
-=== Verify
-
-Open the **Argo CD** tab and click into the `developer-hub` Application:
-
-* Sync status: **Synced**
-* Health status: **Healthy**
-* Managed resource count increased
-
 == Exercise 2: Log in with SSO
 
 Developer Hub is now configured with Keycloak OIDC authentication. Guest access is disabled.
@@ -246,28 +251,33 @@ oc rollout status deployment/backstage-developer-hub -n rhdh
 * The **global header** now shows links to platform tools: DevSpaces, GitLab, and Quay
 * The sidebar has additional plugin entries
 
-== Exercise 3: Explore the plugins
+== Exercise 3: Explore the plugin capabilities
 
-With dynamic plugins enabled, Developer Hub now connects to the platform services running on the cluster.
-
-. Click on the **Application Launcher** icon (grid icon) in the global header
-+
-You'll see quick links to DevSpaces, GitLab, and Quay -- the platform tools your developers will use daily.
+With our chosen dynamic plugins enabled, Developer Hub now connects to the platform services running on the cluster. Off-cluster services are also supported, but for this workshop everything is contained within the workshop environment.
 
 . Navigate to **Catalog** and switch the **Kind** filter to **User** or **Group**. You should see entities already appearing:
 +
-* **Keycloak user sync** -- Developer Hub is importing users and groups from Keycloak automatically. The `dev1`, `dev2`, `pe1`, and `pe2` users and their groups (`developers`, `platformengineers`) should be visible as catalog entities.
+* **Keycloak user sync** -- Developer Hub is now importing users and groups from Keycloak automatically. The `dev1`, `dev2`, `pe1`, and `pe2` users and their groups (`developers`, `platformengineers`) should be visible as catalog entities.
 
 . Navigate to **Catalog** and switch the **Kind** filter to **Component**. You should see the **parasol-insurance** component appear:
 +
-* **GitLab discovery** -- Developer Hub has automatically discovered the parasol-insurance repository which contains a `catalog-info.yaml` file
+* **GitLab discovery** -- Developer Hub has automatically discovered the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance/blob/main/catalog-info.yaml[parasol-insurance repository's catalog-info.yaml,window=_blank] file
 * **Rich integration data** -- Click into the parasol-insurance component to explore:
 ** **Overview tab** -- Shows JIRA issues related to the component (the JIRA integration you just enabled)
 ** **CI tab** -- Displays recent OpenShift Pipelines (Tekton) runs
 ** **Topology tab** -- Shows running pods and Kubernetes resources
 ** **Kubernetes tab** -- Lists all related Kubernetes objects (Deployments, Services, Routes)
 +
-NOTE: The Overview tab shows a warning "This entity has relations to other entities, which can't be found in the catalog." This is expected -- parasol-insurance references related components and APIs that haven't been registered yet. You'll resolve this in the next module when you populate the full catalog.
+[NOTE]
+====
+The `catalog-info.yaml` file is a special Backstage entity descriptor that tells Developer Hub how to display this Component. It includes:
+
+* **Metadata** -- component name, description, ownership, and labels
+* **API references** -- which APIs this component provides or consumes
+* **Annotations** -- integration hooks for Kubernetes (`backstage.io/kubernetes-id`), Tekton (`janus-idp.io/tekton`), JIRA (`jira/project-key`), and Quay (`quay.io/repository-slug`)
+
+Developer Hub reads these annotations to wire up the CI/CD tab (Tekton pipelines), Topology tab (Kubernetes resources), and Overview tab (JIRA issues) you just explored. The component's developers can maintain this file in source control alongside their code, or externally as you'll see in the next module.
+====
 
 . Navigate to **Settings** and confirm your user identity is shown -- this is your Keycloak profile, synced into Developer Hub.
 
@@ -277,18 +287,6 @@ NOTE: The Overview tab shows a warning "This entity has relations to other entit
 * The global header shows platform tool links
 * Your user identity appears in the profile menu
 * Settings shows your user imported from Keycloak
-
-== What changed?
-
-By switching from `base/` to `overlays/02-sso-plugins/`, you added:
-
-* **Authentication** -- `signInPage: oidc` with Keycloak as the identity provider
-* **Integrations** -- GitLab, Argo CD, and Kubernetes cluster connections
-* **Catalog providers** -- Keycloak org sync and GitLab entity discovery
-* **Dynamic plugins** -- Topology, Tekton, Argo CD, Keycloak, GitLab, and the global header
-* **Secrets management** -- ExternalSecrets pulling credentials from Vault so nothing is hardcoded
-
-All of this was a single path change in Argo CD. The Kustomize overlay layered these additions on top of the base configuration.
 
 == Module summary
 

@@ -3,11 +3,18 @@
 :toc: macro
 :toclevels: 1
 
-Parasol's developers can now discover existing services in the catalog. But what about creating new ones? Today, spinning up a new application means copying an old project, manually configuring CI/CD, and hoping you remembered all the security requirements.
+Parasol's developers can now discover existing services in the catalog. But what about creating new ones? Today, spinning up a new application means copying an old project, manually configuring CI/CD, writing deployment YAML, and hoping you remembered all the security requirements.
 
-Software templates are the golden paths of platform engineering. They encode your organisation's best practices -- CI/CD pipelines, security scanning, GitOps deployment, proper catalog registration -- into a self-service workflow that any developer can use.
+Software templates are the golden paths of platform engineering. They encode your organisation's best practices into a self-service workflow. When a developer uses this template, they get a production-ready application without writing a single line of infrastructure code.
 
-In this module, you'll import a template and see how developers can create production-ready applications in minutes.
+**What the template delivers:**
+
+* **Zero YAML required** -- developers write Java, Node.js, or Python; the platform team's Helm charts handle all infrastructure configuration
+* **Security by default** -- automated SonarQube code analysis, Advanced Cluster Security image scanning, and SBOM generation with Trusted Profile Analyzer monitoring
+* **GitOps-driven deployment** -- changes flow through build → dev → prod namespaces via Argo CD, following the platform team's promotion workflow
+* **Full observability** -- ServiceMonitors, network policies, and resource limits configured automatically
+
+In this module, you'll import a template and experience how developers create production-ready applications in minutes instead of weeks.
 
 [IMPORTANT]
 ====
@@ -50,10 +57,12 @@ Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
 
 By the end of this module, you'll be able to:
 
-* Understand how software templates enable developer self-service
+* Understand how software templates enable zero-YAML developer self-service
 * Import templates into Developer Hub via the app-config
 * Configure RBAC policies to control who can create and manage entities
-* Run a template to see the golden path in action
+* Run a template to create a production-ready application with automated security gates
+* Inspect the multi-namespace architecture and CI/CD pipeline created by the platform
+* Articulate the platform engineering value proposition: standardized infrastructure, security by default, and developer velocity
 
 == Exercise 1: Switch to the templates overlay
 
@@ -96,11 +105,18 @@ overlays/04-templates
 
 . Review the template's steps to understand the golden path it implements:
 +
-.. Scaffolds a Quarkus application with pre-configured dependencies
-.. Creates a GitLab repository with the application code
-.. Configures Tekton pipelines for build, test, and image push
-.. Sets up GitOps deployment manifests
-.. Registers the new component in the Developer Hub catalog
+.. **Scaffolds application code** -- generates a Quarkus application with LLM client dependencies and External Secrets integration for API keys
+.. **Creates GitLab repository** -- sets up version control with webhook triggers for CI/CD
+.. **Deploys build infrastructure** -- uses the platform's `build-deployer` Helm chart to create:
+   * Tekton pipeline with SonarQube scanning, ACS image scanning, and SBOM generation
+   * External Secrets for credentials (GitLab, Quay, SonarQube, ACS, TPA)
+   * Webhook-triggered builds on every commit
+.. **Provisions multi-environment deployment** -- uses the platform's `app-deployer` Helm chart to create namespaces for dev and prod with:
+   * Kubernetes Deployments, Services, and Routes
+   * Network policies and ServiceMonitors for observability
+   * Horizontal Pod Autoscaling and resource limits
+.. **Enables GitOps promotion** -- configures Argo CD Applications for automated sync from GitLab manifests
+.. **Registers in catalog** -- adds the component to Developer Hub with ownership, dependencies, and CI/CD integration
 
 == Exercise 3: Run the template
 
@@ -127,16 +143,57 @@ Now experience the golden path as a developer would.
 
 . Once complete, click the links to explore:
 +
-* The new **GitLab repository** with scaffolded code
+* The new **GitLab repository** with scaffolded code -- notice there's **no Kubernetes YAML**, just application code
 * The new **Catalog entity** in Developer Hub
-* The **Tekton pipeline** that was triggered automatically
+* The **Tekton pipeline** that was triggered automatically -- watch it run SonarQube analysis, build the image, scan it with ACS, generate an SBOM, and upload to TPA
 
 === Verify
 
 * The template wizard completed successfully
-* A new GitLab repository was created with the application code
+* A new GitLab repository was created with application code (no infrastructure YAML)
+* Three namespaces exist: `<app-name>-build`, `<app-name>-dev`, `<app-name>-prod`
 * A new component appears in the Developer Hub catalog
-* A Tekton pipeline run was triggered (visible in the CI/CD tab)
+* A Tekton pipeline run was triggered with multiple security and quality gates
+
+== Exercise 4: Inspect what the platform built
+
+The template created infrastructure that would take hours to configure manually.
+
+. In the **OpenShift Console** tab, switch to the **Developer** perspective
+
+. Navigate to **Project** dropdown and find the three namespaces created for your application:
++
+* `<app-name>-build` -- CI/CD infrastructure (Tekton pipelines, External Secrets, build cache)
+* `<app-name>-dev` -- development deployment managed by Argo CD
+* `<app-name>-prod` -- production deployment (promoted via GitOps)
+
+. Select the `-build` namespace and explore **Pipelines**:
++
+* Click on the running PipelineRun to watch the execution
+* Expand the pipeline tasks to see:
+  ** `maven-build` -- compiles the application
+  ** `sonar-scan` -- static code analysis for vulnerabilities
+  ** `generate-sbom` -- creates a Software Bill of Materials
+  ** `acs-image-scan` -- scans the container image for CVEs
+  ** `acs-image-check` -- enforces security policy gates
+  ** `upload-sbom-to-tpa` -- registers the SBOM with Trusted Profile Analyzer for continuous monitoring
+
+. Switch to the `-dev` namespace and explore the **Topology** view:
++
+* Notice the Deployment, Service, and Route were created from the `app-deployer` Helm chart
+* Click on the Deployment to see resource limits, health checks, and environment variables injected via External Secrets
+
+. In the **Developer Hub** tab, navigate to your new component and click the **CI/CD** tab:
++
+* See the pipeline execution integrated directly into the catalog view
+* Developers get visibility into build status without leaving Developer Hub
+
+=== Verify
+
+* Three namespaces exist with the expected resources
+* The Tekton pipeline shows multiple security gates (SonarQube, ACS, SBOM)
+* The dev namespace has a running Deployment created from the platform Helm chart
+* CI/CD status is visible in the Developer Hub catalog
 
 == What changed?
 
@@ -147,19 +204,64 @@ This overlay added:
 
 The RBAC policy ensures that developers can use templates to create applications but cannot modify the catalog structure or delete other teams' entities.
 
+== The platform engineering value proposition
+
+This is where platform engineering delivers transformational impact.
+
+**What the developer experienced:**
+
+* Filled in a simple form (application name, description)
+* Clicked "Create"
+* Got a production-ready application in minutes
+
+**What the platform team delivered invisibly:**
+
+* **Zero infrastructure code for developers** -- no Dockerfiles, no Kubernetes YAML, no pipeline definitions. The `build-deployer` and `app-deployer` Helm charts encode the platform team's standards.
+* **Security by default, not by request** -- every application gets SonarQube analysis, ACS vulnerability scanning, SBOM generation, and continuous monitoring via TPA. Developers can't skip the security gates.
+* **Standardized deployment patterns** -- network policies, resource limits, health checks, observability (ServiceMonitors), and autoscaling configured consistently across all applications.
+* **GitOps-driven promotion** -- changes flow through build → dev → prod namespaces following the platform team's workflow. Developers push code; Argo CD handles deployment.
+* **Integrated toolchain** -- External Secrets Operator injects credentials from Vault, Tekton triggers builds from GitLab webhooks, Argo CD syncs from GitOps repos, and Developer Hub provides unified visibility.
+
+**What this means for Parasol:**
+
+* **Faster time to market** -- new applications in minutes instead of weeks spent writing YAML and configuring pipelines
+* **Consistent compliance** -- security and quality gates applied uniformly; no "forgot to add the SBOM step" incidents
+* **Reduced cognitive load** -- developers focus on business logic in their language of choice; infrastructure is handled
+* **Easier maintenance** -- platform team updates the Helm charts once; all applications benefit from improvements
+
+This is the multiplier effect of platform engineering: build the golden path once, enable hundreds of teams to run it reliably.
+
 == Module summary
 
-Developer self-service is now enabled through golden-path templates.
+You've just experienced the heart of platform engineering: developer self-service powered by golden-path templates.
 
 **What you accomplished:**
 
-* Imported a software template into Developer Hub
-* Configured RBAC policies for platform engineers and developers
-* Ran a template to create a new application with CI/CD, GitOps, and catalog registration
-* Experienced the developer's self-service workflow
+* Imported a software template that encodes Parasol's platform standards
+* Configured RBAC policies to control who can create and manage catalog entities
+* Ran a template to create a production-ready application with **zero infrastructure code**
+* Inspected the multi-namespace architecture, CI/CD pipeline, and security gates the platform created automatically
+* Understood how Helm charts standardize deployment and build patterns across all teams
 
 **Key takeaway:**
-Software templates are where platform engineering delivers its biggest impact. They encode best practices into a repeatable, self-service workflow. Developers get new applications in minutes instead of weeks, and every application follows your organisation's standards by default.
+
+This is the platform engineering multiplier effect in action. The developer filled in a form and got:
+
+* Three namespaces (build, dev, prod) with proper RBAC and network policies
+* A Tekton pipeline with six security and quality gates (SonarQube, ACS scan, ACS check, SBOM generation, TPA upload)
+* GitOps-driven deployment with Argo CD managing the sync from GitLab
+* External Secrets Operator injecting credentials from Vault
+* Full catalog integration with ownership, dependencies, and CI/CD visibility
+
+All delivered in minutes, not weeks. All following the platform team's standards by default, not by enforcement.
+
+**The impact:**
+
+* Developers write code in their language of choice -- Java, Node.js, Python -- not YAML
+* Security gates are mandatory, not optional -- SBOMs, vulnerability scans, and continuous monitoring are built in
+* Platform team updates the `build-deployer` and `app-deployer` charts once; all applications benefit
+* Consistent deployment patterns across hundreds of teams reduce operational toil and incidents
 
 **Next steps:**
-In Module 7, you'll add the final piece -- AI-powered assistance with Lightspeed and MCP, giving developers a natural language interface to the catalog and platform.
+
+In Module 7, you'll add AI-powered assistance with Lightspeed and MCP, giving developers a natural language interface to discover, create, and troubleshoot platform capabilities.

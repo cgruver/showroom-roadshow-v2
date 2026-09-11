@@ -7,14 +7,14 @@ Over the last three modules, you've worked with the building blocks of a well-ru
 
 This is where the developer portal comes in. Red Hat Developer Hub unifies these capabilities behind a self-service interface, so developers can discover services, create applications, and access their tools without needing to understand the underlying platform primitives. Your role as a member of the Platform Engineering team is to deploy and configure it.
 
-Instead of building and maintaining a custom Backstage container and associated JavaScript codebase using the Backstage project, you'll use Red Hat Developer Hub's https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes-native Custom Resource (CR)] to deploy and configure your instance.
+Instead of building and maintaining a custom Backstage container and associated JavaScript codebase using the Backstage project, you'll use Red Hat Developer Hub's https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes-native Custom Resource (CR)] to deploy and configure your instance using the  Red Hat Developer Hub Operator.
 
 == Learning objectives
 
 By the end of this module, you'll be able to:
 
 * Deploy Red Hat Developer Hub using the Backstage CR and Argo CD
-* Understand how the Red Hat Developer Hub Operator manages the deployment lifecycle of Backstage instances
+* Understand how the *Red Hat Developer Hub Operator* manages the deployment lifecycle of Backstage instances
 * Access your running Red Hat Developer Hub instance
 * Recognise how the platform primitives you've already learned (GitOps, secrets, namespaces) will be surfaced through the portal
 
@@ -115,7 +115,7 @@ NOTE: It can take a few minutes for the initial Pod deployment to complete, as i
 
 Once the Operator has created the deployment and the Pod is ready, Developer Hub will be accessible via a Route.
 
-. Open the **Developer Hub** tab
+. Select the **Developer Hub** tab on the right and click the refresh icon
 +
 If the tab doesn't load immediately, wait 1-2 minutes for the pod to start. Remember, it needs to show a green heart symbol in Argo CD.
 
@@ -131,7 +131,7 @@ image::m3/rhdh-empty.png[Red Hat Developer Hub landing page,link=self,window=bla
 * The sidebar is minimal -- no additional plugins are configured
 +
 TIP: Backstage -- and therefore Developer Hub -- uses Entities to represent Components, APIs, Groups, Users, and business Domains in the built-in Software Catalog. These Entities have relationships that can be viewed as a graph, or read by AI Agents to understand your businesses software architecture. You'll see this in action in later modules.
-+
+
 This is the starting point. A functional Developer Hub instance deployed with a single Backstage custom resource and a basic app-config. In the next modules, you'll progressively add authentication, integrations, catalog entities, and templates.
 
 === Verify
@@ -140,14 +140,6 @@ This is the starting point. A functional Developer Hub instance deployed with a 
 * You can log in as a guest
 * The Catalog page is empty
 * The Self-Service page shows no templates
-
-== What just happened?
-
-You deployed Developer Hub using three files:
-
-* **`backstage-cr.yaml`** -- A `Backstage` custom resource that tells the RHDH Operator to create a deployment with a Route, a local database, and your ConfigMaps mounted
-* **`configmap-app-config.yaml`** -- The application configuration (currently just a title and base URL)
-* **`configmap-dynamic-plugins.yaml`** -- The plugin configuration (currently everything disabled)
 
 The RHDH Operator handled the rest: creating the Deployment, Service, Route, and database. No Dockerfiles, no custom builds, no manual pod configuration.
 
@@ -158,7 +150,7 @@ You've deployed a minimal Developer Hub instance using GitOps.
 **What you accomplished:**
 
 * Created an Argo CD Application in your scoped `pe-workshop` project
-* Deployed Developer Hub using the Backstage custom resource
+* Deployed Developer Hub using the Backstage custom resource provided by the Red Hat Developer Hub Operator
 * Verified the instance is running and accessible
 
 **Key takeaway:**
