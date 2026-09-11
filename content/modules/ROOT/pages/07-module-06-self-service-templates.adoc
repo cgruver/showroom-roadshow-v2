@@ -3,9 +3,9 @@
 :toc: macro
 :toclevels: 1
 
-Parasol's developers can now discover existing services in the catalog. But what about creating new ones? Today, spinning up a new application means copying an old project, manually configuring CI/CD, writing deployment YAML, and hoping you remembered all the security requirements.
+Parasol's developers can now discover existing services in the catalog and query it with AI. But what about creating new ones? Today, spinning up a new application means copying an old project, manually configuring CI/CD, writing deployment YAML, and hoping you remembered all the security requirements.
 
-Software templates are the golden paths of platform engineering. They encode your organisation's best practices into a self-service workflow. When a developer uses this template, they get a production-ready application without writing a single line of infrastructure code.
+Software templates are the golden paths of platform engineering. They encode your organisation's best practices into a self-service workflow. When a developer uses a template, they get a production-ready application without writing a single line of infrastructure code.
 
 **What the template delivers:**
 
@@ -14,11 +14,11 @@ Software templates are the golden paths of platform engineering. They encode you
 * **GitOps-driven deployment** -- changes flow through build → dev → prod namespaces via Argo CD, following the platform team's promotion workflow
 * **Full observability** -- ServiceMonitors, network policies, and resource limits configured automatically
 
-In this module, you'll import a template and experience how developers create production-ready applications in minutes instead of weeks.
+The golden-path template was already imported in Module 5 alongside the catalog entities. In this module, you'll experience the developer's self-service workflow by running the template and inspecting the platform infrastructure it creates.
 
 [IMPORTANT]
 ====
-**Skipped the previous modules?** If you didn't complete the "Populate the Software Catalog" module, you can fast-forward to this module's starting state by running:
+**Skipped the previous modules?** If you didn't complete the "Map Parasol's Software Architecture" module, you can fast-forward to this module's starting state by running:
 
 [source,bash,role="execute",subs="attributes+"]
 ----
@@ -33,7 +33,7 @@ spec:
   source:
     repoURL: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git
     targetRevision: main
-    path: overlays/03-catalog-entities
+    path: overlays/03-catalog-lightspeed-templates
   destination:
     server: https://kubernetes.default.svc
     namespace: rhdh
@@ -47,10 +47,8 @@ Wait for the Application to sync and the Pod to become healthy before continuing
 
 [source,bash,role="execute",subs="attributes+"]
 ----
-oc get pods -n rhdh -w
+oc rollout status deployment/backstage-developer-hub -n rhdh
 ----
-
-Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
 ====
 
 == Learning objectives
@@ -58,42 +56,11 @@ Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready.
 By the end of this module, you'll be able to:
 
 * Understand how software templates enable zero-YAML developer self-service
-* Import templates into Developer Hub via the app-config
-* Configure RBAC policies to control who can create and manage entities
 * Run a template to create a production-ready application with automated security gates
 * Inspect the multi-namespace architecture and CI/CD pipeline created by the platform
 * Articulate the platform engineering value proposition: standardized infrastructure, security by default, and developer velocity
 
-== Exercise 1: Switch to the templates overlay
-
-The `overlays/04-templates/` overlay adds two things:
-
-* A **template location** in the app-config pointing to a pre-built Quarkus application template with secure CI/CD pipelines
-* A **RBAC policy ConfigMap** that controls permissions for platform engineers and developers
-
-. In the **Argo CD** tab, click on your **developer-hub** Application
-
-. Click **App Details** and change the **Path** from:
-+
-----
-overlays/03-catalog-entities
-----
-+
-to:
-+
-----
-overlays/04-templates
-----
-
-. Click **Save** and wait for the sync to complete
-
-=== Verify
-
-* Sync status: **Synced**
-* Health status: **Healthy**
-* Resource count increased by 1 (the new RBAC policy ConfigMap)
-
-== Exercise 2: Explore the template
+== Exercise 1: Explore the template
 
 . Open the **Developer Hub** tab and navigate to the **Create** page (or click the **Self-service** button in the global header)
 
@@ -118,7 +85,7 @@ overlays/04-templates
 .. **Enables GitOps promotion** -- configures Argo CD Applications for automated sync from GitLab manifests
 .. **Registers in catalog** -- adds the component to Developer Hub with ownership, dependencies, and CI/CD integration
 
-== Exercise 3: Run the template
+== Exercise 2: Run the template
 
 Now experience the golden path as a developer would.
 
@@ -155,7 +122,7 @@ Now experience the golden path as a developer would.
 * A new component appears in the Developer Hub catalog
 * A Tekton pipeline run was triggered with multiple security and quality gates
 
-== Exercise 4: Inspect what the platform built
+== Exercise 3: Inspect what the platform built
 
 The template created infrastructure that would take hours to configure manually.
 
@@ -194,15 +161,6 @@ The template created infrastructure that would take hours to configure manually.
 * The Tekton pipeline shows multiple security gates (SonarQube, ACS, SBOM)
 * The dev namespace has a running Deployment created from the platform Helm chart
 * CI/CD status is visible in the Developer Hub catalog
-
-== What changed?
-
-This overlay added:
-
-* A **template catalog location** pointing at the pre-built template in GitLab
-* An **RBAC policy** that grants platform engineers full catalog management and both platform engineers and developers the ability to execute templates
-
-The RBAC policy ensures that developers can use templates to create applications but cannot modify the catalog structure or delete other teams' entities.
 
 == The platform engineering value proposition
 

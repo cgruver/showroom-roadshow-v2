@@ -52,7 +52,9 @@ By the end of this module, you'll be able to:
 * Register catalog entities by adding location URLs to the app-config
 * Visualize system architecture using System Diagrams and relationship graphs
 * Navigate domain documentation (including compliance information) through the catalog
-* Understand how the catalog serves as both a human-facing portal and a machine-readable knowledge graph for AI agents
+* Use Lightspeed to query the catalog with natural language
+* Understand how MCP connects AI assistants to the catalog API
+* Recognize the catalog as both a human-facing portal and a machine-readable knowledge graph for AI agents
 
 == The Backstage entity model
 
@@ -68,26 +70,35 @@ Each entity is defined in a `catalog-info.yaml` file that typically lives alongs
 
 Not every entity needs a hand-crafted YAML file, though. Integrations like the GitLab discovery provider (which you enabled in the previous module) can scan repositories and auto-register any `catalog-info.yaml` files they find. Other providers go further -- the Keycloak provider you configured automatically imports users and groups from your identity provider, and CI/CD integrations can surface pipeline and deployment data without any catalog changes at all.
 
-== Exercise 1: Switch to the catalog entities overlay
+== Exercise 1: Switch to the catalog and AI overlay
 
-The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-entities[`overlays/03-catalog-entities/`,window=_blank] overlay adds a new ConfigMap that merges `catalog.locations` entries into the app-config, pointing Developer Hub at Parasol's existing repositories.
+The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-lightspeed-templates[`overlays/03-catalog-lightspeed-templates/`,window=_blank] overlay adds:
+
+* **Catalog locations** -- Parasol's architecture entities (Systems, Components, APIs, Domains)
+* **Software templates** -- Golden-path templates for developer self-service
+* **RBAC policies** -- Role-based permissions for platform engineers and developers
+* **Lightspeed AI assistant** -- Sidecar containers (llama-stack, lightspeed-core) with RAG data
+* **MCP integration** -- Model Context Protocol connecting Lightspeed to the catalog API
 
 . In the **Argo CD** tab, click on your **developer-hub** Application
 
 . Click **Details**, then **Manifest**, and enable **Edit** mode to change the **Path** to:
 +
 ----
-overlays/03-catalog-entities
+overlays/03-catalog-lightspeed-templates
 ----
 
 . Click **Save** and Argo CD will rollout a new version of Red Hat Developer Hub using the new overlay.
++
+NOTE: This overlay adds sidecar containers to the Backstage pod. The pod will restart and take 2-3 minutes to become ready as it downloads the RAG data and starts the LLM inference service.
 
-While you wait, take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/03-catalog-entities/configmap-app-config-catalog.yaml[new ConfigMap,window=_blank] that instructs Developer Hub to load entities. The ConfigMap adds a `catalog.locations` block pointing at Parasol's catalog index, which references all of Parasol's entity definitions.
+While you wait, take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-lightspeed-templates[new overlay directory,window=_blank] to see all the resources being deployed.
 
 === Verify
 
 * Sync status: **Synced**
-* Health status: **Healthy**
+* Health status: **Healthy** (may take 2-3 minutes for pod to become ready)
+* Resource count increased significantly (catalog, RBAC, Lightspeed ConfigMaps, ExternalSecret)
 
 == Exercise 2: Explore the catalog
 
@@ -145,17 +156,6 @@ You're now viewing domain-level documentation that lives alongside the catalog e
 +
 Notice that this documentation is discoverable through the same interface developers use to find services and APIs. It's not buried in Confluence or a wiki -- it's registered in the catalog alongside the code.
 
-[IMPORTANT]
-====
-**AI context, not just human context**
-
-This catalog isn't just for humans browsing Developer Hub. In future modules, you'll see how this structured knowledge becomes AI context accessible via the Model Context Protocol (MCP).
-
-When a developer asks an AI assistant "How does Parasol handle PCI compliance?", the assistant can query the catalog via MCP, retrieve the Billing & Payments documentation, and answer with authoritative, up-to-date information. The same graph relationships you just explored visually can be traversed programmatically by agents to understand system dependencies, trace API calls, or suggest which teams to contact for a feature request.
-
-The catalog is a **machine-readable knowledge graph** as much as it is a developer portal.
-====
-
 === Verify
 
 * The Catalog page shows Parasol's Systems, Components, and APIs
@@ -163,51 +163,142 @@ The catalog is a **machine-readable knowledge graph** as much as it is a develop
 * The View Graph feature shows deeper dependency trees
 * The Docs page includes Billing & Payments documentation with PCI-DSS compliance information
 
+== Exercise 3: Query the catalog with Lightspeed
+
+You've just explored the catalog visually as a human. Now see how AI agents can query the same catalog programmatically via the Model Context Protocol (MCP).
+
+[NOTE]
+====
+The overlay you just deployed includes **Lightspeed** -- an AI assistant integrated into Developer Hub. Lightspeed runs as sidecar containers (llama-stack for LLM inference, lightspeed-core for the service layer) with MCP access to the catalog API.
+
+This means Lightspeed can query real catalog data in real-time -- not generic documentation, but your actual Systems, Components, APIs, and TechDocs.
+====
+
+. Wait for the Developer Hub pod to finish rolling out (this can take 2-3 minutes as the RAG data downloads and the LLM service starts):
++
+[source,bash,role="execute",subs="attributes+"]
+----
+oc rollout status deployment/backstage-developer-hub -n rhdh
+----
+
+. Open the **Developer Hub** tab and look for the **Lightspeed** icon in the top-right corner (chat bubble icon) or in the left sidebar
+
+. Click the Lightspeed icon to open the chat interface
+
+. Try asking Lightspeed about the catalog you just explored:
++
+* _"How does Parasol handle PCI compliance?"_
+  ** Lightspeed uses MCP to query the catalog's TechDocs API
+  ** Retrieves the Billing & Payments documentation you saw in Exercise 2
+  ** Returns an answer grounded in the actual compliance documentation
++
+* _"What components are in the API Gateway System?"_
+  ** Lightspeed queries the catalog API for the API Gateway System entity
+  ** Lists the actual Components you saw in the System Diagram
++
+* _"What does the Claims service depend on?"_
+  ** Lightspeed traverses the catalog's relationship graph
+  ** Returns the API and Resource dependencies
+
+. Notice how Lightspeed's answers reference **real entities** from your catalog, not generic responses
+
+. Try one of the pre-configured suggested prompts if available in the chat interface
+
+=== Verify
+
+* Lightspeed chat interface is available (chat icon in top-right or sidebar)
+* Lightspeed responds to questions about Parasol's catalog entities
+* Answers reference actual Systems, Components, APIs from the catalog you just registered
+* PCI compliance query returns information from the Billing & Payments TechDocs
+
+[IMPORTANT]
+====
+**This is the platform engineering multiplier effect in action**
+
+You built a machine-readable knowledge graph (the catalog). Now:
+
+* **Humans** can explore it visually (System Diagrams, docs, relationship graphs)
+* **AI agents** can query it programmatically (MCP provides structured API access)
+* **Both** get authoritative, up-to-date answers from the same source of truth
+
+The catalog you just mapped isn't just documentation -- it's **operational intelligence** accessible to both humans and machines.
+
+When a developer asks Lightspeed "How does Parasol handle PCI compliance?", they get the exact same Billing & Payments documentation you saw in Exercise 2 -- retrieved via MCP, not hard-coded responses.
+
+This is why investing in catalog quality pays dividends: better human discovery AND better AI-powered assistance, both grounded in the same authoritative source.
+====
+
 == What changed?
 
-The only difference between this overlay and the previous one is a new `catalog.locations` entry in the app-config pointing at a single catalog index:
+This overlay added significant functionality to Developer Hub:
 
-[source,yaml]
-----
-catalog:
-  locations:
-    - type: url
-      target: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/blob/main/catalog-index.yaml
-      rules:
-        - allow: [Component, System, API, Resource, Location, Domain, Group]
-----
+1. **Catalog locations** -- Four catalog.locations entries:
+   - `parasol-entities/catalog-index.yaml` (Parasol's architecture: Systems, Domains, Components, APIs)
+   - `parasol-store/catalog-info.yaml` (example Component)
+   - `parasol-store-api/catalog-info.yaml` (example API)
+   - `rhdh-template-developer-self-service/location.yaml` (golden-path templates)
 
-This single location points to a `catalog-index.yaml` that references all of Parasol's entity definitions -- Groups, Domains, Systems, Components, and APIs. Developer Hub reads the index, follows its targets, and builds the full catalog graph. Using an index file like this is a common pattern for managing large catalogs without listing every entity file individually.
+2. **RBAC policies** -- Role-based access control:
+   - Platform engineers: full catalog management, template execution
+   - Developers: read catalog, execute templates, manage their own entities
+
+3. **Lightspeed AI assistant** -- Three sidecar containers added to the Backstage pod:
+   - `llama-stack` -- LLM inference with qwen3-14b model
+   - `lightspeed-core` -- Service layer coordinating chat UI, LLM, and MCP
+   - `init-rag-data` -- Init container that loads RHDH product documentation embeddings
+
+4. **MCP integration** -- Model Context Protocol configuration:
+   - `mcp::backstage` server registered in Lightspeed config
+   - Points to `http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1`
+   - Gives Lightspeed structured access to catalog API and TechDocs API
+   - 15+ dynamic plugins including MCP tools, GitLab, ArgoCD, Kubernetes, Tekton
+
+The catalog index pattern (one Location pointing to a file with many targets) is a common approach for managing large catalogs without listing every entity individually.
 
 == Module summary
 
-The software catalog is now populated with Parasol's architecture -- Systems, Components, APIs, Resources, and documentation.
+Parasol's Internal Developer Platform now has a mapped software architecture and an AI assistant that can query it.
 
 **What you accomplished:**
 
-* Registered catalog entities by adding location URLs to the app-config
-* Explored the System Diagram to visualize Parasol's architecture at scale
+* Registered Parasol's software architecture in the catalog (Systems, Components, APIs, Resources, documentation)
+* Explored the System Diagram to visualize architecture at scale
 * Used the relationship graph to trace dependencies across multiple levels
 * Discovered domain documentation (Billing & Payments) including PCI-DSS compliance information
-* Understood how the catalog serves as both a human-facing portal and a machine-readable knowledge graph
+* **Enabled Lightspeed AI assistant** with MCP access to the catalog
+* **Queried the catalog with natural language** -- asked about PCI compliance, components, and dependencies
+* Saw how the same catalog data serves both human and AI interfaces
 
 **Key takeaway:**
 
 The software catalog is more than a service registry -- it's a **knowledge graph** that models your entire software landscape. Systems, components, APIs, resources, teams, and documentation are all connected in a queryable structure.
 
-For humans, this means:
+**For humans**, this means:
 
 * **Instant discovery** -- find services, APIs, and docs without filing tickets
 * **Visual architecture** -- understand system dependencies through diagrams
 * **Integrated information** -- CI/CD status, topology, and documentation in one place
 
-For AI agents (coming in Module 7), this means:
+**For AI agents**, this means:
 
-* **Programmatic access** via MCP to query catalog entities
+* **Programmatic access** via MCP to query catalog entities in real-time
 * **Contextual answers** grounded in authoritative, up-to-date documentation
 * **Relationship traversal** to answer questions like "what depends on this API?" or "which team owns the Billing service?"
 
 The catalog isn't just documentation -- it's **operational intelligence** accessible to both humans and machines.
+
+**The multiplier effect:**
+
+You built the catalog once. Now developers can:
+- Explore it visually (System Diagrams)
+- Ask questions about it (Lightspeed + MCP)
+- Build on it (templates in the next module)
+
+All three capabilities are grounded in the same authoritative source of truth.
+
+**Next steps:**
+
+In Module 6, you'll see how developers use golden-path templates to create new applications -- applications that automatically register themselves in this catalog, continuing the cycle of discoverable, AI-queryable platform intelligence.
 
 **Next steps:**
 
