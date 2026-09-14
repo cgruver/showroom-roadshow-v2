@@ -58,7 +58,7 @@ By the end of this module, you'll be able to:
 
 == The Backstage entity model
 
-Before registering entities, it's worth understanding how the catalog organises information:
+Before registering entities (like the Parasol Insurance component in the prior module), it's worth understanding how the catalog organises information:
 
 * **Component** -- A software unit (service, library, website) owned by a team
 * **API** -- An interface exposed by a component (REST, gRPC, event)
@@ -66,19 +66,11 @@ Before registering entities, it's worth understanding how the catalog organises 
 * **Resource** -- Infrastructure dependencies (databases, queues, clusters)
 * **Domain** -- A business area that owns systems
 
-Each entity is defined in a `catalog-info.yaml` file that typically lives alongside the source code. The team that owns a component is responsible for maintaining its `catalog-info.yaml` -- just like they maintain the code itself. Developer Hub reads these files and builds the catalog graph.
+Each entity is defined in a YAML file (commonly named `catalog-info.yaml`) file that typically lives alongside the source code. The team that owns a component is responsible for maintaining its `catalog-info.yaml` -- just like they maintain the code itself. Developer Hub reads these files and builds the catalog graph.
 
 Not every entity needs a hand-crafted YAML file, though. Integrations like the GitLab discovery provider (which you enabled in the previous module) can scan repositories and auto-register any `catalog-info.yaml` files they find. Other providers go further -- the Keycloak provider you configured automatically imports users and groups from your identity provider, and CI/CD integrations can surface pipeline and deployment data without any catalog changes at all.
 
-== Exercise 1: Switch to the catalog and AI overlay
-
-The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-lightspeed-templates[`overlays/03-catalog-lightspeed-templates/`,window=_blank] overlay adds:
-
-* **Catalog locations** -- Parasol's architecture entities (Systems, Components, APIs, Domains)
-* **Software templates** -- Golden-path templates for developer self-service
-* **RBAC policies** -- Role-based permissions for platform engineers and developers
-* **Lightspeed AI assistant** -- Sidecar containers (llama-stack, lightspeed-core) with RAG data
-* **MCP integration** -- Model Context Protocol connecting Lightspeed to the catalog API
+== Exercise 1: Enable the Entities Overlay
 
 . In the **Argo CD** tab, click on your **developer-hub** Application
 
@@ -88,25 +80,43 @@ The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-r
 overlays/03-catalog-lightspeed-templates
 ----
 
-. Click **Save** and Argo CD will rollout a new version of Red Hat Developer Hub using the new overlay.
+. Click **Save** and Argo CD will begin syncing the new overlay
+
+This overlay adds catalog locations, software templates, RBAC policies, and AI capabilities (Lightspeed with MCP). These additional capabilities will be explored in subsequent sections of this workshop.
+
+== Exercise 2: Explore Parasol's catalog entities repository
+
+While Developer Hub is deploying, take a look at the catalog entity definitions being imported.
+
+As part of their IDP adoption initiative, Parasol's teams created catalog entity definitions to document their architecture. This wasn't just for human consumption -- it was also part of their AI strategy: structured, machine-readable documentation that AI assistants can query programmatically.
+
+. In the **GitLab** tab, navigate to the **parasol** group and click on the **parasol-entities** repository
+
+. Open the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/catalog-index.yaml[`catalog-index.yaml`,window=_blank] file at the repository root
 +
-NOTE: This overlay adds sidecar containers to the Backstage pod. The pod will restart and take 2-3 minutes to become ready as it downloads the RAG data and starts the LLM inference service.
+This is the **catalog index** -- a specialized Location entity that references all of Parasol's architecture definitions. Notice the `spec.targets` array: each entry points to a YAML file containing entity definitions.
 
-While you wait, take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-lightspeed-templates[new overlay directory,window=_blank] to see all the resources being deployed.
+. Browse the repository structure:
++
+* `parasol-foundations.yaml` -- Groups, Domains, and Systems
+* `components/` directory -- Individual services (Claims, Underwriting, Policy, etc.)
+* Each file contains Backstage entity definitions with metadata, ownership, and relationships
 
-=== Verify
+. Open https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/parasol-foundations.yaml[`parasol-foundations.yaml`,window=_blank] to see how Domains and Systems are defined
++
+Notice the TechDocs annotations (`backstage.io/techdocs-ref`) -- these link to documentation for each Domain, including the PCI-DSS compliance information you'll explore later.
 
-* Sync status: **Synced**
-* Health status: **Healthy** (may take 2-3 minutes for pod to become ready)
-* Resource count increased significantly (catalog, RBAC, Lightspeed ConfigMaps, ExternalSecret)
+. Open one of the component files, such as https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/components/parasol-catalog-claims.yaml[`components/parasol-catalog-claims.yaml`,window=_blank]
++
+See how each component specifies its type, lifecycle, owner, system membership, and API dependencies. This metadata is what powers the System Diagrams and relationship graphs you'll explore next.
 
-== Exercise 2: Explore the catalog
+== Exercise 3: Explore the catalog in Developer Hub
 
-Developer Hub is now importing a set of entities from Parasol's GitLab repositories. These entities have been crafted to represent Parasol's existing software architecture, business domains, and resources.
+Developer Hub is now importing the entity definitions you just explored in GitLab.
 
 [NOTE]
 ====
-You'll need to wait until the new Pod in your `developer-hub` Argo CD Application has finished rolling out. Use the following command to observe and wait for a successful rollout:
+You'll need to wait until the new Developer Hub pod has finished rolling out. Use the following command to observe and wait for a successful rollout:
 
 [source,bash,role="execute",subs="attributes+"]
 ----
@@ -163,7 +173,7 @@ Notice that this documentation is discoverable through the same interface develo
 * The View Graph feature shows deeper dependency trees
 * The Docs page includes Billing & Payments documentation with PCI-DSS compliance information
 
-== Exercise 3: Query the catalog with Lightspeed
+== Exercise 4: Query the catalog with Lightspeed
 
 You've just explored the catalog visually as a human. Now see how AI agents can query the same catalog programmatically via the Model Context Protocol (MCP).
 
@@ -173,13 +183,6 @@ The overlay you just deployed includes **Lightspeed** -- an AI assistant integra
 
 This means Lightspeed can query real catalog data in real-time -- not generic documentation, but your actual Systems, Components, APIs, and TechDocs.
 ====
-
-. Wait for the Developer Hub pod to finish rolling out (this can take 2-3 minutes as the RAG data downloads and the LLM service starts):
-+
-[source,bash,role="execute",subs="attributes+"]
-----
-oc rollout status deployment/backstage-developer-hub -n rhdh
-----
 
 . Open the **Developer Hub** tab and look for the **Lightspeed** icon in the top-right corner (chat bubble icon) or in the left sidebar
 
