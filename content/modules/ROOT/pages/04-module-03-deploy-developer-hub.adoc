@@ -20,7 +20,7 @@ By the end of this module, you'll be able to:
 
 == Exercise 1: Explore the Configuration Files
 
-A repository containing a basic set of configuration files has been pre-created for you - take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git[rhdh/ocp-pe-wkshp-rhdh-configs GitLab repository].
+A repository containing a basic set of configuration files has been pre-created for you - take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs.git[rhdh/ocp-pe-wkshp-rhdh-configs GitLab repository,window=gitlab].
 
 NOTE: If prompted to log in to GitLab, use username `pe1` and password `{common_password}`.
 

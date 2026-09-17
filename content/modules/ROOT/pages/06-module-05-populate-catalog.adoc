@@ -3,9 +3,11 @@
 :toc: macro
 :toclevels: 1
 
-A developer portal is only as useful as the information it contains. Right now, Developer Hub is connected to the platform but the catalog is empty. Parasol's developers can't discover services, APIs, or documentation because nobody has registered them.
+A developer portal is only as useful as the information it contains. Right now, Developer Hub is connected to your platform but the catalog is pretty bare with only the *Parasol Insurance* application used in the prior section. 
 
-In this module, you'll register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable map of the entire software landscape.
+Parasol's developers and their agentic coding harnesses can't discover services, APIs, or documentation because nobody has registered them yet.
+
+In this module, you'll register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable **map of the entire software landscape for AI agents and humans**.
 
 [IMPORTANT]
 ====
@@ -92,7 +94,7 @@ As part of their IDP adoption initiative, Parasol's teams created catalog entity
 
 . In the **GitLab** tab, navigate to the **parasol** group and click on the **parasol-entities** repository
 
-. Open the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/catalog-index.yaml[`catalog-index.yaml`,window=_blank] file at the repository root
+. Open the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/catalog-index.yaml[`catalog-index.yaml`,window=gitlab] file at the repository root
 +
 This is the **catalog index** -- a specialized Location entity that references all of Parasol's architecture definitions. Notice the `spec.targets` array: each entry points to a YAML file containing entity definitions.
 
@@ -102,11 +104,11 @@ This is the **catalog index** -- a specialized Location entity that references a
 * `components/` directory -- Individual services (Claims, Underwriting, Policy, etc.)
 * Each file contains Backstage entity definitions with metadata, ownership, and relationships
 
-. Open https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/parasol-foundations.yaml[`parasol-foundations.yaml`,window=_blank] to see how Domains and Systems are defined
+. Open https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/parasol-foundations.yaml[`parasol-foundations.yaml`,window=gitlab] to see how Domains and Systems are defined
 +
 Notice the TechDocs annotations (`backstage.io/techdocs-ref`) -- these link to documentation for each Domain, including the PCI-DSS compliance information you'll explore later.
 
-. Open one of the component files, such as https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/components/parasol-catalog-claims.yaml[`components/parasol-catalog-claims.yaml`,window=_blank]
+. Open one of the component files, such as https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/components/parasol-catalog-claims.yaml[`components/parasol-catalog-claims.yaml`,window=gitlab]
 +
 See how each component specifies its type, lifecycle, owner, system membership, and API dependencies. This metadata is what powers the System Diagrams and relationship graphs you'll explore next.
 
@@ -262,17 +264,6 @@ The catalog index pattern (one Location pointing to a file with many targets) is
 
 Parasol's Internal Developer Platform now has a mapped software architecture and an AI assistant that can query it.
 
-**What you accomplished:**
-
-* Registered Parasol's software architecture in the catalog (Systems, Components, APIs, Resources, documentation)
-* Explored the System Diagram to visualize architecture at scale
-* Used the relationship graph to trace dependencies across multiple levels
-* Discovered domain documentation (Billing & Payments) including PCI-DSS compliance information
-* **Enabled Lightspeed AI assistant** with MCP access to the catalog
-* **Queried the catalog with natural language** -- asked about PCI compliance, components, and dependencies
-* Saw how the same catalog data serves both human and AI interfaces
-
-**Key takeaway:**
 
 The software catalog is more than a service registry -- it's a **knowledge graph** that models your entire software landscape. Systems, components, APIs, resources, teams, and documentation are all connected in a queryable structure.
 
@@ -293,16 +284,13 @@ The catalog isn't just documentation -- it's **operational intelligence** access
 **The multiplier effect:**
 
 You built the catalog once. Now developers can:
+
 - Explore it visually (System Diagrams)
 - Ask questions about it (Lightspeed + MCP)
-- Build on it (templates in the next module)
+- Build on it (self-service templates, as seen in the next module)
 
 All three capabilities are grounded in the same authoritative source of truth.
 
 **Next steps:**
 
-In Module 6, you'll see how developers use golden-path templates to create new applications -- applications that automatically register themselves in this catalog, continuing the cycle of discoverable, AI-queryable platform intelligence.
-
-**Next steps:**
-
-In Module 6, you'll import a golden-path software template that lets developers create new applications with pre-configured CI/CD pipelines, security gates, and automatic catalog registration -- self-service at its best.
+In the next module, you'll see how developers use golden-path templates to create new applications. These applications implement secure software supply chain practices, use standardized build and deployment manifests, and automatically register themselves in this catalog, continuing the cycle of discoverable, AI-queryable platform intelligence.

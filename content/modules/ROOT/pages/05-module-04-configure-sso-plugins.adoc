@@ -261,7 +261,7 @@ With our chosen dynamic plugins enabled, Developer Hub now connects to the platf
 
 . Navigate to **Catalog** and switch the **Kind** filter to **Component**. You should see the **parasol-insurance** component appear:
 +
-* **GitLab discovery** -- Developer Hub has automatically discovered the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance/blob/main/catalog-info.yaml[parasol-insurance repository's catalog-info.yaml,window=_blank] file
+* **GitLab discovery** -- Developer Hub has automatically discovered the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance/blob/main/catalog-info.yaml[parasol-insurance repository's catalog-info.yaml,window=gitlab] file
 * **Rich integration data** -- Click into the parasol-insurance component to explore:
 ** **Overview tab** -- Shows JIRA issues related to the component (the JIRA integration you just enabled)
 ** **CI tab** -- Displays recent OpenShift Pipelines (Tekton) runs
