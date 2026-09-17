@@ -75,13 +75,11 @@ oc get pods -n rhdh -w
 ----
 
 Press `Ctrl+C` to stop watching once the pod shows `Running` and `1/1` ready. The pod starting with `backstage-developer-hub` may take a few minutes to become ready on first deployment.
-
-Once the pod is ready, click the **Developer Hub** tab and log in with username `pe1` and password `{common_password}` to confirm it's working.
 ====
 
 == Exercise 0: Switch to the SSO and plugins overlay
 
-The `overlays/02-sso-plugins/` directory builds on the base configuration by adding:
+The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/02-sso-plugins[overlays/02-sso-plugins/,window=gitlab] directory builds on the base configuration by adding:
 
 * **OIDC authentication** via Keycloak -- users log in with their corporate identity
 * **Dynamic plugins** -- Tekton pipeline view, Argo CD deployment status, Kubernetes topology, GitLab integration, and a global header with links to platform tools
@@ -111,7 +109,7 @@ While you wait for Developer Hub to rollout the new configuration, the next sect
 
 NOTE: We've done the prerequisite work of loading secret data in Vault for you. The key focus of this workshop is to learn the high-level configuration steps and understand the benefit you can provide to developer teams with Red Hat Developer Hub. You'll leave this workshop with an excellent template to start building out your own internal developer portal.
 
-Take a look at the pieces that have been pre-configured for this module. Vault was introduced in Module 4 -- now you'll see how it can be used to provide secrets required by Developer Hub's plugins and integrations through ExternalSecrets.
+Take a look at the pieces that have been pre-configured for this module. Vault was introduced in a prior module -- now you'll see how it can be used to provide secrets required by Developer Hub's plugins and integrations through ExternalSecrets to allow Developer Hub to ingest data from your platform components.
 
 === How the pieces connect
 
@@ -220,6 +218,8 @@ The file contains only references -- no sensitive values.
 |A random secret used to secure Developer Hub's backend
 |===
 
+TIP: The External Secrets are individual files in this example, however you could combine them into a single file for convenience.
+
 Every credential Developer Hub needs is pulled from Vault automatically. Nothing is hardcoded in Git. Rotating the credentials and updating them in Vault will result in any ExternalSecret reference also updating the Secret used by Developer Hub.
 
 == Exercise 2: Log in with SSO
@@ -261,9 +261,11 @@ With our chosen dynamic plugins enabled, Developer Hub now connects to the platf
 
 . Navigate to **Catalog** and switch the **Kind** filter to **Component**. You should see the **parasol-insurance** component appear:
 +
-* **GitLab discovery** -- Developer Hub has automatically discovered the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance/blob/main/catalog-info.yaml[parasol-insurance repository's catalog-info.yaml,window=gitlab] file
-* **Rich integration data** -- Click into the parasol-insurance component to explore:
-** **Overview tab** -- Shows JIRA issues related to the component (the JIRA integration you just enabled)
+TIP: A warning about missing relations will be shown on the Parasol Insurance component overview page. We'll fix that soon!
++
+* **GitLab discovery** -- Developer Hub has automatically discovered the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance/blob/main/catalog-info.yaml[parasol-insurance repository's catalog-info.yaml,window=gitlab] file via the GitLab plugin you enabled
+* **Rich integration data** -- Click into the parasol-insurance component to explore data provided by other plugins:
+** **Overview tab** -- Shows JIRA issues related to the component (the JIRA integration you just enabled - this uses fake data in this workshop environment)
 ** **CI tab** -- Displays recent OpenShift Pipelines (Tekton) runs
 ** **Topology tab** -- Shows running pods and Kubernetes resources
 ** **Kubernetes tab** -- Lists all related Kubernetes objects (Deployments, Services, Routes)
@@ -281,12 +283,7 @@ Developer Hub reads these annotations to wire up the CI/CD tab (Tekton pipelines
 
 . Navigate to **Settings** and confirm your user identity is shown -- this is your Keycloak profile, synced into Developer Hub.
 
-=== Verify
-
-* You can log in with SSO (no guest access)
-* The global header shows platform tool links
-* Your user identity appears in the profile menu
-* Settings shows your user imported from Keycloak
+The integrations you just enabled are defined in two overlay files: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/02-sso-plugins/patches/dynamic-plugins.yaml[dynamic-plugins.yaml,window=gitlab] lists the plugins (Keycloak, GitLab, Argo CD, Kubernetes, Tekton), and https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/02-sso-plugins/configmap-app-config-auth.yaml[configmap-app-config-auth.yaml,window=gitlab] contains their configuration (OIDC settings, API endpoints, authentication providers).
 
 == Module summary
 
@@ -300,7 +297,7 @@ Developer Hub is now a connected portal with corporate SSO and platform integrat
 * Connected Developer Hub to Vault for secrets management
 
 **Key takeaway:**
-Configuration changes are GitOps-driven overlays, not manual edits. Each overlay builds on the previous one, adding capabilities incrementally.
+Developers now have a single place to view builds, issues, app health, and logs -- all gated by their corporate identity. Instead of switching between Jenkins, JIRA, and kubectl, they work from one unified portal.
 
 **Next steps:**
-In Module 8, you'll populate the software catalog with Parasol's services and APIs, giving developers a single place to discover everything.
+In the next module, you'll populate the software catalog with Parasol's services, documentation and APIs, giving developers and AI agents a single place to understand the organisation's software landscape.

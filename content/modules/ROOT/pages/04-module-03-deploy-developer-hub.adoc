@@ -157,4 +157,4 @@ You've deployed a minimal Developer Hub instance using GitOps.
 Deploying Developer Hub is operator-managed and declarative. In the modules ahead, you'll progressively configure this portal to surface the platform capabilities you've already explored: secrets from Vault, managed namespaces with guardrails, and GitOps-driven deployments -- all through a self-service interface that developers can use without filing a ticket.
 
 **Next steps:**
-In Module 7, you'll switch to the next configuration overlay to add SSO authentication, platform integrations, and dynamic plugins. Developer Hub will transform from a blank canvas into a connected portal.
+In the next module, you'll switch to the next configuration overlay to add SSO authentication, platform integrations, and dynamic plugins. Developer Hub will transform from a blank canvas into a connected portal.

@@ -1,13 +1,13 @@
-= Module 5: Map Parasol's Software Architecture
+= Module 5: Map Parasol's Software Architecture (for humans and agents)
 :source-highlighter: rouge
 :toc: macro
 :toclevels: 1
 
-A developer portal is only as useful as the information it contains. Right now, Developer Hub is connected to your platform but the catalog is pretty bare with only the *Parasol Insurance* application used in the prior section. 
+How often have you needed to find API documentation for a service, or figure out which team owns a particular component, but didn't know where to look? Maybe you searched Confluence, asked in Slack, or dug through old Jira tickets. The catalog is the answer -- for you and your AI agents.
 
-Parasol's developers and their agentic coding harnesses can't discover services, APIs, or documentation because nobody has registered them yet.
+Right now, Developer Hub is connected to your platform but the catalog is pretty bare with only the *Parasol Insurance* application used in the prior section. Parasol's developers and their agentic coding harnesses can't discover services, APIs, or documentation because nobody has registered them yet.
 
-In this module, you'll register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable **map of the entire software landscape for AI agents and humans**.
+In this module, you'll register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable **map of the entire software landscape for AI agents and humans** and expose it to **agents via Model Context Protocol (MCP)**.
 
 [IMPORTANT]
 ====
@@ -81,29 +81,24 @@ Not every entity needs a hand-crafted YAML file, though. Integrations like the G
 ----
 overlays/03-catalog-lightspeed-templates
 ----
-
 . Click **Save** and Argo CD will begin syncing the new overlay
 
 This overlay adds catalog locations, software templates, RBAC policies, and AI capabilities (Lightspeed with MCP). These additional capabilities will be explored in subsequent sections of this workshop.
 
+image::populate-catalog/argo-manifest.png[Updating the Developer Hub Application's manifest to use a new overlay via Argo CD's UI,link=self,window=blank,align="center",width=700,title=Updating the Developer Hub Application's manifest to use a new overlay via Argo CD's UI]
+
 == Exercise 2: Explore Parasol's catalog entities repository
 
-While Developer Hub is deploying, take a look at the catalog entity definitions being imported.
+While Developer Hub is deploying, let's take a look at the catalog entity definitions being imported.
 
 As part of their IDP adoption initiative, Parasol's teams created catalog entity definitions to document their architecture. This wasn't just for human consumption -- it was also part of their AI strategy: structured, machine-readable documentation that AI assistants can query programmatically.
 
-. In the **GitLab** tab, navigate to the **parasol** group and click on the **parasol-entities** repository
-
+. Refresh the **GitLab** tab on the right, and open the **parasol-entities** repository
++
+image::populate-catalog/gitlab-projectslist-entities.png[The `parasol-entities` repository in GitLab,link=self,window=blank,align="center",width=700,title=The `parasol-entities` repository in GitLab]
 . Open the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/catalog-index.yaml[`catalog-index.yaml`,window=gitlab] file at the repository root
 +
 This is the **catalog index** -- a specialized Location entity that references all of Parasol's architecture definitions. Notice the `spec.targets` array: each entry points to a YAML file containing entity definitions.
-
-. Browse the repository structure:
-+
-* `parasol-foundations.yaml` -- Groups, Domains, and Systems
-* `components/` directory -- Individual services (Claims, Underwriting, Policy, etc.)
-* Each file contains Backstage entity definitions with metadata, ownership, and relationships
-
 . Open https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/parasol-foundations.yaml[`parasol-foundations.yaml`,window=gitlab] to see how Domains and Systems are defined
 +
 Notice the TechDocs annotations (`backstage.io/techdocs-ref`) -- these link to documentation for each Domain, including the PCI-DSS compliance information you'll explore later.
@@ -131,7 +126,8 @@ oc rollout status deployment/backstage-developer-hub -n rhdh
 . Navigate to the **Catalog** page
 
 . You should see Parasol's entities appearing. Use the **Kind** dropdown filter and select **System** to view system-level entities
-
++
+image::populate-catalog/catalog-populated.png[Developer Hub catalog showing System entities,link=self,window=blank,align="center",width=700,title=The Developer Hub catalog showing System entities]
 . Click on the **API Gateway System** to open its details page
 
 . Click the **System Diagram** button (near the top of the page)
@@ -143,6 +139,8 @@ Notice how the diagram shows:
 * **Components** grouped into their parent System
 * **API relationships** showing which services talk to each other
 * **Resource dependencies** like databases and message queues
++
+image::populate-catalog/system-diagram.png[Developer Hub showing the API Gateway system diagram,link=self,window=blank,align="center",width=700,title=Developer Hub showing the API Gateway system diagram]
 
 . Click **View Graph** (at the top right of the diagram)
 +
@@ -154,11 +152,12 @@ This opens the full relationship graph with additional depth. You can:
 +
 This is the catalog's power: it doesn't just list services, it models the relationships between them. When a developer asks "what does the Billing service depend on?", the graph shows the answer immediately.
 
-. Close the graph view and return to the **Catalog** page
-
-. Click **Docs** in the left navigation bar
+. Click **Docs** in the left navigation bar, and use the **Filters** to show *All documentation*
 
 . Click on **Billing & Payments** in the documentation index
++
+image::populate-catalog/docs-list.png[The TechDocs list in Developer Hub,link=self,window=blank,align="center",width=700,title=The TechDocs list in Developer Hub]
+
 +
 You're now viewing domain-level documentation that lives alongside the catalog entities. This includes:
 +
@@ -167,13 +166,6 @@ You're now viewing domain-level documentation that lives alongside the catalog e
 * **Onboarding guides** for developers joining the Billing team
 +
 Notice that this documentation is discoverable through the same interface developers use to find services and APIs. It's not buried in Confluence or a wiki -- it's registered in the catalog alongside the code.
-
-=== Verify
-
-* The Catalog page shows Parasol's Systems, Components, and APIs
-* The API Gateway System diagram visualizes component relationships
-* The View Graph feature shows deeper dependency trees
-* The Docs page includes Billing & Payments documentation with PCI-DSS compliance information
 
 == Exercise 4: Query the catalog with Lightspeed
 
@@ -186,7 +178,7 @@ The overlay you just deployed includes **Lightspeed** -- an AI assistant integra
 This means Lightspeed can query real catalog data in real-time -- not generic documentation, but your actual Systems, Components, APIs, and TechDocs.
 ====
 
-. Open the **Developer Hub** tab and look for the **Lightspeed** icon in the top-right corner (chat bubble icon) or in the left sidebar
+. Open the **Developer Hub** tab and look for the floating **Lightspeed** icon in the bottom-right corner
 
 . Click the Lightspeed icon to open the chat interface
 
@@ -209,13 +201,6 @@ This means Lightspeed can query real catalog data in real-time -- not generic do
 
 . Try one of the pre-configured suggested prompts if available in the chat interface
 
-=== Verify
-
-* Lightspeed chat interface is available (chat icon in top-right or sidebar)
-* Lightspeed responds to questions about Parasol's catalog entities
-* Answers reference actual Systems, Components, APIs from the catalog you just registered
-* PCI compliance query returns information from the Billing & Payments TechDocs
-
 [IMPORTANT]
 ====
 **This is the platform engineering multiplier effect in action**
@@ -237,33 +222,15 @@ This is why investing in catalog quality pays dividends: better human discovery 
 
 This overlay added significant functionality to Developer Hub:
 
-1. **Catalog locations** -- Four catalog.locations entries:
-   - `parasol-entities/catalog-index.yaml` (Parasol's architecture: Systems, Domains, Components, APIs)
-   - `parasol-store/catalog-info.yaml` (example Component)
-   - `parasol-store-api/catalog-info.yaml` (example API)
-   - `rhdh-template-developer-self-service/location.yaml` (golden-path templates)
+1. **Catalog locations** -- Parasol's architecture entities, example components, and golden-path templates are now imported.
 
-2. **RBAC policies** -- Role-based access control:
-   - Platform engineers: full catalog management, template execution
-   - Developers: read catalog, execute templates, manage their own entities
+2. **Lightspeed AI assistant** -- An AI assistant powered by a large language model, with access to Red Hat Developer Hub product documentation.
 
-3. **Lightspeed AI assistant** -- Three sidecar containers added to the Backstage pod:
-   - `llama-stack` -- LLM inference with qwen3-14b model
-   - `lightspeed-core` -- Service layer coordinating chat UI, LLM, and MCP
-   - `init-rag-data` -- Init container that loads RHDH product documentation embeddings
-
-4. **MCP integration** -- Model Context Protocol configuration:
-   - `mcp::backstage` server registered in Lightspeed config
-   - Points to `http://backstage-developer-hub.rhdh.svc.cluster.local/api/mcp-actions/v1`
-   - Gives Lightspeed structured access to catalog API and TechDocs API
-   - 15+ dynamic plugins including MCP tools, GitLab, ArgoCD, Kubernetes, Tekton
-
-The catalog index pattern (one Location pointing to a file with many targets) is a common approach for managing large catalogs without listing every entity individually.
+3. **MCP capabilites** -- Agents, like Lightspeed, can now query the catalog API and TechDocs programmatically via Model Context Protocol.
 
 == Module summary
 
 Parasol's Internal Developer Platform now has a mapped software architecture and an AI assistant that can query it.
-
 
 The software catalog is more than a service registry -- it's a **knowledge graph** that models your entire software landscape. Systems, components, APIs, resources, teams, and documentation are all connected in a queryable structure.
 
@@ -280,16 +247,6 @@ The software catalog is more than a service registry -- it's a **knowledge graph
 * **Relationship traversal** to answer questions like "what depends on this API?" or "which team owns the Billing service?"
 
 The catalog isn't just documentation -- it's **operational intelligence** accessible to both humans and machines.
-
-**The multiplier effect:**
-
-You built the catalog once. Now developers can:
-
-- Explore it visually (System Diagrams)
-- Ask questions about it (Lightspeed + MCP)
-- Build on it (self-service templates, as seen in the next module)
-
-All three capabilities are grounded in the same authoritative source of truth.
 
 **Next steps:**
 

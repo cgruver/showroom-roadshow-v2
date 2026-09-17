@@ -5,16 +5,22 @@
 
 Parasol's developers can now discover existing services in the catalog and query it with AI. But what about creating new ones? Today, spinning up a new application means copying an old project, manually configuring CI/CD, writing deployment YAML, and hoping you remembered all the security requirements.
 
-Software templates are the golden paths of platform engineering. They encode your organisation's best practices into a self-service workflow. When a developer uses a template, they get a production-ready application without writing a single line of infrastructure code.
+Software templates are the golden paths of platform engineering. They encode your organisation's best practices into a self-service workflow that developers can consume. When a developer uses a template, they get a production-ready application without writing a single line of infrastructure code.
+
+In addition to this, it's imperative that organizations adopt a trusted secure software supply chain practices. This includes, but isn't limited to generating and managing SBOMs (software bill of materials) from your own build process and 3rd party libraries, image and dependency vulnerability scanning, artifact signing, SLSA (Supply-chain Levels for Software Artifacts) attestions, signature and attestation validation at deploy time, and continuous policy enforcement on-cluster.
+
+Software templates simplify this process by abstracting away the supply chain security aspects of the pipeline, allowing developers to focus on code while the platform team ensures compliance is in place.
+
+image::self-service/secure-pipeline-delivery.png[Secure software supply chain pipeline with security gates,link=self,window=blank,align="center",width=100%,title=Secure software supply chain pipeline with security gates]
 
 **What the template delivers:**
 
-* **Zero YAML required** -- developers write Java, Node.js, or Python; the platform team's Helm charts handle all infrastructure configuration
-* **Security by default** -- automated SonarQube code analysis, Advanced Cluster Security image scanning, and SBOM generation with Trusted Profile Analyzer monitoring
+* **Zero YAML required** -- developers write Java, Node.js, or Python; the platform team's build and deploy Helm charts handle all infrastructure configuration
+* **Security by default** -- automated SonarQube code analysis, **Red Hat Advanced Cluster Security** image scanning, and SBOM generation with **Red Hat Trusted Profile Analyzer** monitoring
 * **GitOps-driven deployment** -- changes flow through build → dev → prod namespaces via Argo CD, following the platform team's promotion workflow
-* **Full observability** -- ServiceMonitors, network policies, and resource limits configured automatically
+* **Full observability** -- ServiceMonitors, network policies, health checks, and resource limits configured automatically
 
-The golden-path template was already imported in Module 5 alongside the catalog entities. In this module, you'll experience the developer's self-service workflow by running the template and inspecting the platform infrastructure it creates.
+The golden-path template was already imported in the prior module alongside the catalog entities. In this module, you'll experience the developer's self-service workflow by running the template and inspecting the platform infrastructure it creates.
 
 [IMPORTANT]
 ====
@@ -62,81 +68,128 @@ By the end of this module, you'll be able to:
 
 == Exercise 1: Explore the template
 
-. Open the **Developer Hub** tab and navigate to the **Create** page (or click the **Self-service** button in the global header)
+. Open the **Developer Hub** tab and log in as `dev1` (password: `{common_password}`) if you're not already logged in as that user
 
-. You should see the imported software template. Click on it to review:
-+
-* **Template name and description** -- What the template creates
-* **Input parameters** -- What the developer needs to provide (application name, Git organisation, etc.)
-* **Steps** -- What the template does behind the scenes (scaffolding code, creating a repository, configuring pipelines, registering the catalog entity)
+. Navigate to the **Create** page (or click the **Self-service** button in the global header)
 
-. Review the template's steps to understand the golden path it implements:
+. You should see the imported software template
 +
+image::self-service/rhdh-template-ui.png[Self-service UI in Developer Hub showing a single Software Template,link=self,window=blank,align="center",width=700,title=Self-service UI in Developer Hub showing a single Software Template]
+
+. Review the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/rhdh-template-developer-self-service/-/tree/main/quarkus-chatbot-rag[quarkus-chatbot-rag template in GitLab,window=gitlab] to understand the golden path it implements. The specific sections are in the `template.yaml` file:
++
+.. **Captures user supplied parameters** -- such as the application name, group ownership, and a short description (for the generated catalog-info.yaml!)
 .. **Scaffolds application code** -- generates a Quarkus application with LLM client dependencies and External Secrets integration for API keys
-.. **Creates GitLab repository** -- sets up version control with webhook triggers for CI/CD
-.. **Deploys build infrastructure** -- uses the platform's `build-deployer` Helm chart to create:
-   * Tekton pipeline with SonarQube scanning, ACS image scanning, and SBOM generation
-   * External Secrets for credentials (GitLab, Quay, SonarQube, ACS, TPA)
-   * Webhook-triggered builds on every commit
-.. **Provisions multi-environment deployment** -- uses the platform's `app-deployer` Helm chart to create namespaces for dev and prod with:
-   * Kubernetes Deployments, Services, and Routes
-   * Network policies and ServiceMonitors for observability
-   * Horizontal Pod Autoscaling and resource limits
-.. **Enables GitOps promotion** -- configures Argo CD Applications for automated sync from GitLab manifests
+.. **Creates source and GitOps repositories** -- sets up two GitLab repos: one for Java source code, another for GitOps manifests (Helm chart references and values)
+.. **Registers the new application with the app-of-apps** -- pushes bootstrap configuration to the infra-app-of-apps repository, which triggers Argo CD to deploy the application infrastructure
 .. **Registers in catalog** -- adds the component to Developer Hub with ownership, dependencies, and CI/CD integration
+
+The app-of-apps is a special Argo CD Application, owned by the Platform Team, that manages rollout of GitOps manifest repositories like the one you just created. Argo CD automatically deploys the standardized infrastructure using the platform's https://github.com/redhat-pe-workshop/ocp-app-platform-demo-apps-helm#openshift-app-platform--reusable-helm-charts[build-deployer and app-deployer Helm charts,window=_blank]:
+
+. **Build namespace** with Tekton pipeline, SonarQube scanning, ACS image scanning, SBOM generation, and External Secrets for credentials
+. **Dev and Prod namespaces** with Deployments, Services, Routes, network policies, ServiceMonitors, and resource limits
+
+The following is a visual depiction of the output of the software template - this illustrates the value of codifying your processes; developers complete a form and the platform handles the rest!
+
+[mermaid,svg,width=100%]
+----
+flowchart TB
+    User([👤 Developer]) -->|Run Template| RHDH[Red Hat Developer Hub]
+
+    RHDH -->|Create Source Repo| GL_SRC[GitLab: Java Source]
+    RHDH -->|Create GitOps Repo| GL_GITOPS[GitLab: GitOps Source]
+    RHDH -->|Update with new GitOps Repo Ref| GL_INFRA[GitLab: App-of-Apps]
+
+    GL_INFRA -.->|Watched by| ARGO[Argo CD]
+
+    ARGO -->|Managed Build| BUILD_NS
+
+    BUILD_NS -->|Deploys| PIPELINE[Tekton Pipeline + EventListener]
+
+    GL_SRC -->|Webhook on Push| PIPELINE
+
+    PIPELINE -->|Build & Scan| BUILD[Maven + SonarQube + ACS]
+    PIPELINE -->|Push Image| QUAY[Quay Registry]
+    PIPELINE -->|Update Manifest Image Tag| GL_GITOPS
+
+    GL_GITOPS -.->|Watched after App-of-Apps Update| ARGO
+    ARGO -->|Managed Deployment| DEV_NS
+    ARGO -->|Managed Deployment| PROD_NS
+
+    DEV_NS -->|Pulls Image| QUAY
+    PROD_NS -->|Pulls Image| QUAY
+
+    DEV_NS --> OCP_DEV[OpenShift: Running Pod]
+    PROD_NS --> OCP_PROD[OpenShift: Running Pod]
+
+    RHDH -.->|Register Component| CATALOG[Developer Hub Catalog]
+
+    style RHDH fill:#ee0000,stroke:#fff,stroke-width:3px,color:#fff
+    style User fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#333
+    style GL_SRC fill:#fc6d26,stroke:#fff,stroke-width:2px,color:#fff
+    style GL_GITOPS fill:#fc6d26,stroke:#fff,stroke-width:2px,color:#fff
+    style GL_INFRA fill:#fc6d26,stroke:#fff,stroke-width:2px,color:#fff
+    style ARGO fill:#ef7b4d,stroke:#fff,stroke-width:2px,color:#fff
+    style QUAY fill:#40b4e5,stroke:#fff,stroke-width:2px,color:#fff
+    style OCP_DEV fill:#ee0000,stroke:#fff,stroke-width:2px,color:#fff
+    style OCP_PROD fill:#ee0000,stroke:#fff,stroke-width:2px,color:#fff
+    style CATALOG fill:#ee0000,stroke:#fff,stroke-width:2px,color:#fff
+----
 
 == Exercise 2: Run the template
 
-Now experience the golden path as a developer would.
+Enough exposition, let's experience the software template as a developer would.
 
 . Click **Choose** on the template to start the wizard
-
++
+image::self-service/rhdh-template-choose.png[Template input parameters being captured in Developer Hub,link=self,window=blank,align="center",width=700,title=Template input parameters being captured in Developer Hub]
 . Fill in the parameters:
 +
-* **Application name**: Choose a name (e.g., `parasol-claims`)
+* **Application name**: Choose a name (e.g., `parasol-chatbot`)
 * **Description**: A short description
+* **Owner**: Select `group:default/developers` in the dropdown
+* **Developer Group**: Select `group:default/developers` in the dropdown
 * Accept the defaults for other fields
 
-. Click through the wizard steps, reviewing what will be created
+. Click **Next**. Leave the image registry settings unchanged, then proceed to the **Review** screen.
 
-. Click **Create** to execute the template
-
-. Watch the progress as the template:
+. Click **Create** to execute the template. Watch the progress as the template:
 +
 * Scaffolds the application code
 * Creates the GitLab repository
 * Configures the CI/CD pipeline
 * Registers the new component in the catalog
++
+image::self-service/rhdh-template-run.png[Developer Hub showing a finished run of the Template,link=self,window=blank,align="center",width=700,title=Developer Hub showing a finished run of the Template]
 
 . Once complete, click the links to explore:
 +
-* The new **GitLab repository** with scaffolded code -- notice there's **no Kubernetes YAML**, just application code
+* The new **Source Repository** with scaffolded code -- notice there's **no Kubernetes YAML**, just application code
++
+image::self-service/gitlab-new-repo.png[New GitLab repository containing Quarkus code and a catalog-info.yaml,link=self,window=blank,align="center",width=700,title=New GitLab repository containing Quarkus code and a catalog-info.yaml]
+* An additional new **GitOps Repository** with `app/` and `build/` folders to handle build and deployment via GitOps using the Helm Charts mentioned previously (the `Chart.yaml` files reference the charts and their version)
++
+image::self-service/gitlab-minimal-build.png[GitLab GitOps repository with minimal build YAML, and a value.yaml for parameter overrides,link=self,window=blank,align="center",width=700,title=GitLab GitOps repository with minimal build YAML, and a value.yaml for parameter overrides]
 * The new **Catalog entity** in Developer Hub
++
+image::self-service/rhdh-parasol-chatbot.png[Parasol Chatbot entity in the Developer Hub catalog,link=self,window=blank,align="center",width=700,title=Parasol Chatbot entity in the Developer Hub catalog]
 * The **Tekton pipeline** that was triggered automatically -- watch it run SonarQube analysis, build the image, scan it with ACS, generate an SBOM, and upload to TPA
-
-=== Verify
-
-* The template wizard completed successfully
-* A new GitLab repository was created with application code (no infrastructure YAML)
-* Three namespaces exist: `<app-name>-build`, `<app-name>-dev`, `<app-name>-prod`
-* A new component appears in the Developer Hub catalog
-* A Tekton pipeline run was triggered with multiple security and quality gates
 
 == Exercise 3: Inspect what the platform built
 
 The template created infrastructure that would take hours to configure manually.
 
-. In the **OpenShift Console** tab, switch to the **Developer** perspective
+. Select the **OpenShift Console** tab on the right.
 
-. Navigate to **Project** dropdown and find the three namespaces created for your application:
+. Using the left menu, to **Home > Projects** and find the three namespaces created for your application:
 +
-* `<app-name>-build` -- CI/CD infrastructure (Tekton pipelines, External Secrets, build cache)
-* `<app-name>-dev` -- development deployment managed by Argo CD
-* `<app-name>-prod` -- production deployment (promoted via GitOps)
+* `parasol-chatbot-build` -- CI/CD infrastructure (Tekton pipelines, External Secrets, build cache)
+* `parasol-chatbot-dev` -- development deployment managed by Argo CD
+* `parasol-chatbot-prod` -- production deployment (promoted via GitOps)
 
-. Select the `-build` namespace and explore **Pipelines**:
+. Select the `parasol-chatbot-build` namespace and choose **Pipelines > Pipeline Runs** from the left menu:
 +
-* Click on the running PipelineRun to watch the execution
+* Click on the running `push` PipelineRun to watch the execution
 * Expand the pipeline tasks to see:
   ** `maven-build` -- compiles the application
   ** `sonar-scan` -- static code analysis for vulnerabilities
@@ -150,19 +203,12 @@ The template created infrastructure that would take hours to configure manually.
 * Notice the Deployment, Service, and Route were created from the `app-deployer` Helm chart
 * Click on the Deployment to see resource limits, health checks, and environment variables injected via External Secrets
 
-. In the **Developer Hub** tab, navigate to your new component and click the **CI/CD** tab:
+. In the **Developer Hub** tab, navigate to your new component and click **CI** tab:
 +
 * See the pipeline execution integrated directly into the catalog view
 * Developers get visibility into build status without leaving Developer Hub
 
-=== Verify
-
-* Three namespaces exist with the expected resources
-* The Tekton pipeline shows multiple security gates (SonarQube, ACS, SBOM)
-* The dev namespace has a running Deployment created from the platform Helm chart
-* CI/CD status is visible in the Developer Hub catalog
-
-== The platform engineering value proposition
+== Module summary
 
 This is where platform engineering delivers transformational impact.
 
@@ -189,37 +235,4 @@ This is where platform engineering delivers transformational impact.
 
 This is the multiplier effect of platform engineering: build the golden path once, enable hundreds of teams to run it reliably.
 
-== Module summary
-
-You've just experienced the heart of platform engineering: developer self-service powered by golden-path templates.
-
-**What you accomplished:**
-
-* Imported a software template that encodes Parasol's platform standards
-* Configured RBAC policies to control who can create and manage catalog entities
-* Ran a template to create a production-ready application with **zero infrastructure code**
-* Inspected the multi-namespace architecture, CI/CD pipeline, and security gates the platform created automatically
-* Understood how Helm charts standardize deployment and build patterns across all teams
-
-**Key takeaway:**
-
-This is the platform engineering multiplier effect in action. The developer filled in a form and got:
-
-* Three namespaces (build, dev, prod) with proper RBAC and network policies
-* A Tekton pipeline with six security and quality gates (SonarQube, ACS scan, ACS check, SBOM generation, TPA upload)
-* GitOps-driven deployment with Argo CD managing the sync from GitLab
-* External Secrets Operator injecting credentials from Vault
-* Full catalog integration with ownership, dependencies, and CI/CD visibility
-
-All delivered in minutes, not weeks. All following the platform team's standards by default, not by enforcement.
-
-**The impact:**
-
-* Developers write code in their language of choice -- Java, Node.js, Python -- not YAML
-* Security gates are mandatory, not optional -- SBOMs, vulnerability scans, and continuous monitoring are built in
-* Platform team updates the `build-deployer` and `app-deployer` charts once; all applications benefit
-* Consistent deployment patterns across hundreds of teams reduce operational toil and incidents
-
-**Next steps:**
-
-In Module 7, you'll add AI-powered assistance with Lightspeed and MCP, giving developers a natural language interface to discover, create, and troubleshoot platform capabilities.
+In the next module, you'll experience how developers can use a standardized Cloud Development Environment (CDE) provided by **OpenShift Dev Spaces** to develop applications with AI assitance in a hosted VS Code environment hosted on OpenShift.
