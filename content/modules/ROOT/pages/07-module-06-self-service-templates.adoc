@@ -13,7 +13,7 @@ Software templates simplify this process by abstracting away the supply chain se
 
 image::self-service/secure-pipeline-delivery.png[Secure software supply chain pipeline with security gates,link=self,window=blank,align="center",width=100%,title=Secure software supply chain pipeline with security gates]
 
-**What the template delivers:**
+**What today's sample template delivers:**
 
 * **Zero YAML required** -- developers write Java, Node.js, or Python; the platform team's build and deploy Helm charts handle all infrastructure configuration
 * **Security by default** -- automated SonarQube code analysis, **Red Hat Advanced Cluster Security** image scanning, and SBOM generation with **Red Hat Trusted Profile Analyzer** monitoring
@@ -116,9 +116,9 @@ image::self-service/rhdh-template-choose.png[Template input parameters being cap
 . Fill in the parameters:
 +
 * **Application name**: Choose a name (e.g., `parasol-chatbot`)
-* **Description**: A short description
 * **Owner**: Select `group:default/developers` in the dropdown
 * **Developer Group**: Select `group:default/developers` in the dropdown
+* **Description**: The default is fine
 * Accept the defaults for other fields
 
 . Click **Next**. Leave the image registry settings unchanged, then proceed to the **Review** screen.
@@ -165,7 +165,7 @@ You should see:
 * `parasol-chatbot-dev` -- development deployment managed by Argo CD
 * `parasol-chatbot-prod` -- production deployment (promoted via GitOps)
 +
-NOTE: If the namespaces are not listed, wait a minute and retry the command. There's a short delay between running the template and Argo CD rolling out the infrastructure. 
+NOTE: If the namespaces are not listed, wait a minute and retry the command. There's a short delay between running the template and Argo CD rolling out the infrastructure. You can speed it up by finding the infra-app-bootstraps* Application in Argo CD and clicking *Refresh*.
 
 . In Developer Hub, click the **CI** tab to watch the pipeline execution:
 +
@@ -190,8 +190,7 @@ image::self-service/rhdh-cd-pane.png[Argo CD Applications that manage environmen
 
 . Click the **Topology** tab to explore the dev environment's deployment:
 +
-* Notice the Deployment, Service, and Route were created from the `app-deployer` Helm chart
-* Click on the component to see resource limits, health checks, and environment variables injected via External Secrets
+NOTE: Both dev and prod environments will show error states until the first build is complete.
 +
 image::self-service/rhdh-topology.png[Production and Development applications in the Topology View, with Development environment Route, Service, and Pod details shown,link=self,window=blank,align="center",width=700,title="Production and Development applications in the Topology View, with Development environment Route, Service, and Pod details shown"]
 

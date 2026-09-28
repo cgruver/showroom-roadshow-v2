@@ -115,8 +115,6 @@ This same pattern is used for all five secrets in this overlay: Keycloak OIDC, G
 
 === Keycloak: the identity provider
 
-. Select the **Keycloak** tab on the right.
-
 . Log in to the Keycloak admin console. Retrieve the admin credentials from the terminal:
 +
 [source,bash,role="execute",subs="attributes+"]
@@ -126,6 +124,7 @@ KC_PASS=$(oc get secret keycloak-initial-admin -n keycloak -o jsonpath='{.data.p
 echo "Username: $KC_USER"
 echo "Password: $KC_PASS"
 ----
+. Select the **Keycloak** tab on the right.
 . Expand the sidemenu. In the top-left dropdown, select the **backstage** realm. This realm has been pre-configured with:
 +
 image::rhdh-integrations/keycloak-users.png["Users pre-created in the Backstage Realm in Keycloak",link=self,window=blank,align="center",width=700,title="Users pre-created in the Backstage Realm in Keycloak"]
@@ -147,7 +146,7 @@ echo "Token: $VAULT_TOKEN"
 
 . Navigate to `kv` > `secrets/` > `keycloak/` > `client-secret` then select the *Secret* tab
 +
-image::rhdh-integrations/keycloak-users.png["Users pre-created in the Backstage Realm in Keycloak",link=self,window=blank,align="center",width=700,title="Users pre-created in the Backstage Realm in Keycloak"]
+image::rhdh-integrations/vault-secrets.png["Secrets pre-created in Vault to save you some time",link=self,window=blank,align="center",width=700,title="Secrets pre-created in Vault to save you some time"]
 You'll see the `clientId` and `clientSecret` values that Developer Hub needs to connect to Keycloak. These are the same credentials referenced by the `backstage` client you just saw in Keycloak. 
 
 The workshop has pre-populated the credentials in Vault to save time, but a platform team will typically add them to Vault as necessary to make them available to applications. If the Secret is updated in Vault, downstream applications will receeive the new value automatically.
@@ -157,8 +156,6 @@ The workshop has pre-populated the credentials in Vault to save time, but a plat
 . Open the **GitLab** tab and log in as `pe1` with password `{common_password}` if prompted
 
 . Navigate to *rhdh/ocp-pe-wkshp-rhdh-configs* and open the `overlays/02-sso-plugins/` folder
-+
-gitlab-external-secrets.png
 . Open `es-oauth-client.yaml`. This ExternalSecret follows exactly the same pattern you used in Module 4:
 +
 image::rhdh-integrations/gitlab-external-secrets.png["External Secret CRs for Developer Hub",link=self,window=blank,align="center",width=700,title="External Secret CRs for Developer Hub"] 

@@ -93,7 +93,7 @@ EOF
 * A `Backstage` custom resource -- tells the Operator what to deploy
 * A `ConfigMap` with the app-config -- minimal configuration with just a title and base URL
 * A `ConfigMap` for dynamic plugins -- all plugins disabled for now
-. The Backstage resource should have a number of child resources that it manages, including a `dynamic-plugins-root` PersistentVolumeClaim -- this is where Developer Hub unpacks and loads plugins at runtime without rebuilding the container image.
+. The Backstage resource should have a number of child resources that it manages, including the a `backstage-developer-hub` Deployment
 +
 image::m3/argo-app-tree.png[The Argo CD application view showing all managed resources,link=self,window=blank,align="center",width=700,title="Showing resources managed by the *developer-hub* Application in Argo CD"]
 
@@ -105,9 +105,9 @@ In the Argo CD Application view, you should see:
 
 * Sync status: **Synced**
 * Health status: **Healthy**
-* Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol  (this takes up to 5 minutes as plugins are unpacked and installed)
+* Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol
 
-NOTE: It can take a few minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs you can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
+NOTE: It can take up to 5 minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs you can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
 
 == Exercise 3: Access Developer Hub
 
@@ -117,7 +117,7 @@ Once the Operator has created the deployment and the Pod is ready, Developer Hub
 +
 If the tab doesn't load immediately, wait 1-2 minutes for the pod to start. Remember, it needs to show a green heart symbol in Argo CD.
 
-. You should see the Developer Hub landing page with guest authentication
+. You should see the Developer Hub landing page with a *guest authentication* option
 +
 Click **Enter** to log in as a guest user.
 +

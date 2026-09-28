@@ -52,7 +52,7 @@ This module gives you the hands-on feel for that loop before you use it for the 
 
 == Exercise 1: Explore the sample application
 
-A repository named https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/prerequisite-samples[`prerequisite-samples`,window=gitlab] has been pre-created in your GitLab instance. It contains a `gitops/` directory with three Kubernetes manifests. These manifests define a basic HTTP server deployment.
+A repository named https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/prerequisite-samples[prerequisite-samples,window=gitlab] has been pre-created in your GitLab instance. It contains a `gitops/` directory with three Kubernetes manifests. These manifests define a basic HTTP server deployment.
 
 . Open the **GitLab** tab and log in if prompted:
 +

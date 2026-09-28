@@ -3,7 +3,7 @@
 :toc: macro
 :toclevels: 1
 
-How often have you needed to find API documentation for a service, or figure out which team owns a particular component, but didn't know where to look? Maybe you searched Confluence, asked in Slack, or dug through old Jira tickets. The catalog is the answer -- for you and your AI agents.
+How often have you needed to find API documentation for a service, or figure out which team owns a particular component, but didn't know where to look? Maybe you searched Confluence, asked in Slack, or dug through old Jira tickets. The *software catalog* is the answer -- for you and your AI agents.
 
 Right now, Developer Hub is connected to your platform but the catalog is pretty bare with only the *Parasol Insurance* application used in the prior section. Parasol's developers and their agentic coding harnesses can't discover services, APIs, or documentation because nobody has registered them yet.
 
@@ -59,17 +59,17 @@ image::populate-catalog/argo-manifest.png[Updating the Developer Hub Application
 
 While Developer Hub is deploying, let's take a look at the catalog entity definitions being imported.
 
-As part of their IDP adoption initiative, Parasol's teams created catalog entity definitions to document their architecture. This wasn't just for human consumption -- it was also part of their AI strategy: structured, machine-readable documentation that AI assistants can query programmatically.
+Parasol's catalog of entity definitions isn't just for human consumption -- it was also part of their AI strategy: structured, machine-readable documentation that AI assistants can query programmatically.
 
 . Refresh the **GitLab** tab on the right, and open the **parasol/parasol-entities** repository
 +
 image::populate-catalog/gitlab-projectslist-entities.png[The `parasol-entities` repository in GitLab,link=self,window=blank,align="center",width=700,title=The `parasol-entities` repository in GitLab]
 . Open the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/catalog-index.yaml[catalog-index.yaml,window=gitlab] file at the repository root
 +
-This is the **catalog index** -- a specialized Location entity that references all of Parasol's architecture definitions. Notice the `spec.targets` array: each entry points to a YAML file containing entity definitions.
+This is the **catalog index** -- a specialized Location entity that references all of Parasol's architecture definitions in the `spec.targets` array.
 . Explore the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/tree/main/techdocs/domains/billing-payments[techdocs/domains/billing-payments/,window=gitlab] directory to see how documentation can be stored
 +
-This directory contains Markdown documentation for the Billing & Payments domain, including PCI-DSS compliance information you'll explore later. While this example stores documentation in a dedicated repository, teams can also store docs alongside their component's source code if they prefer -- the `backstage.io/techdocs-ref` annotation in entity definitions tells Developer Hub where to find the documentation.
+This directory contains Markdown documentation for the Billing & Payments domain, including PCI-DSS compliance information you'll explore later. While this example stores documentation in a dedicated repository, teams can also store docs alongside their component's source code if they prefer.
 
 . Open one of the component files, such as https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/components/parasol-catalog-claims.yaml[components/parasol-catalog-claims.yaml,window=gitlab]
 +
@@ -174,6 +174,8 @@ Who should I talk to if I have questions about the API Gateway System?
 * Lightspeed traverses the catalog's relationship graph
 * Finds the owning Group and finds an associated Slack channel
 +
+NOTE: As is the nature of LLMs, responses can vary. Your response is unlikely to match the screenshot below.
++
 image::populate-catalog/lightspeed-teams.png["Lightspeed can determine ownership and generate contact links",link=self,window=blank,align="center",width=700,title="Lightspeed can determine ownership and generate contact links"]
 . Notice how Lightspeed's answers reference **real entities** from your catalog, not generic responses
 
@@ -196,7 +198,7 @@ This is why investing in catalog quality pays dividends: better human discovery 
 
 == What changed?
 
-This overlay added significant functionality to Developer Hub:
+This https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/tree/main/overlays/03-catalog-lightspeed-templates[overlay,window=gitlab] added significant functionality to Developer Hub:
 
 1. **Catalog locations** -- Parasol's architecture entities, example components, and golden-path templates are now imported.
 
