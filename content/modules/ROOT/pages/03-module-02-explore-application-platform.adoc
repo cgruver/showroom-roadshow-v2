@@ -3,7 +3,7 @@
 :toc: macro
 :toclevels: 1
 
-Before you build the developer portal, you need to understand what's already running on the cluster. OpenShift is more than a container runtime -- it's an **application platform** with integrated CI/CD, GitOps, Cloud Development Environments (CDE), and secrets management. These capabilities form the foundation of your own internal developer platform.
+Before you build the developer portal, you need to understand the cloud-native tools that Parasol is adopting using OpenShift. OpenShift is more than a container runtime -- it's an **application platform** with integrated CI/CD, GitOps, Cloud Development Environments (CDE), and secrets management. These capabilities form the foundation of your own internal developer platform.
 
 In this module, you'll log into the OpenShift console and Argo CD to see what's available and understand how the infrastructure is managed.
 
@@ -12,9 +12,8 @@ In this module, you'll log into the OpenShift console and Argo CD to see what's 
 By the end of this module, you'll be able to:
 
 * Identify the pre-installed operators that provide application platform capabilities
-* Navigate the OpenShift console to verify operator availability
-* Log into Argo CD and understand the app-of-apps deployment pattern
-* Distinguish between the infrastructure project (read-only) and your workshop project (read-write)
+* Log into Argo CD and understand the app-of-apps deployment pattern and it's use of RBAC
+* View CI Pipelines in OpenShift and understand that they run as Pods
 
 == Exercise 1: Explore OpenShift
 
@@ -29,7 +28,7 @@ NOTE: These specific tools are used in this workshop, but the concepts apply reg
 
 . Navigate to **Ecosystem > Installed Operators** using the left-hand menu and verify the following are installed:
 +
-NOTE: The *Installed Operators* page can take a moment to discover and list every Operator.
+TIP: The *Installed Operators* page can take a moment to discover and list every Operator.
 +
 * **Red Hat OpenShift GitOps** -- Argo CD for declarative deployments
 * **Red Hat OpenShift Pipelines** -- Tekton for CI/CD pipelines
@@ -49,7 +48,7 @@ You should see all operators listed with a status of **Succeeded** in the Instal
 
 == Exercise 2: Login and Explore Argo CD
 
-Argo CD manages the cluster infrastructure using a pattern called https://argo-cd.readthedocs.io/en/latest/operator-manual/cluster-bootstrapping/#app-of-apps-pattern-alternative[**app-of-apps**] -- a single parent Application that deploys and manages all the child Applications (GitLab, Keycloak, Vault, Pipelines, and more). You'll use this same pattern to manage your Developer Hub configuration.
+Argo CD manages the cluster infrastructure using a pattern called https://argo-cd.readthedocs.io/en/latest/operator-manual/cluster-bootstrapping/#app-of-apps-pattern-alternative[**app-of-apps**,window=argocd_docs] -- a single parent Application that deploys and manages all the child Applications (GitLab, Keycloak, Vault, Pipelines, and more). You'll use this same pattern to manage your Developer Hub configuration.
 
 . Select the **Argo CD** tab on the right
 
@@ -74,7 +73,9 @@ image::explore-the-platform/argocd-app-of-apps.png[The app-of-apps in Argo CD - 
 +
 NOTE: You have **read-only** access to the `default` project in Argo CD. You can view but not modify any infrastructure Applications that we've pre-deployed. By letting you view these, you can see that we're not just telling you to use GitOps -- we use it too!
 +
-. Click **Settings > Projects** in the left sidebar. You should see the **pe-workshop** and *developer-apps* projects. The former is the GitOps Project you'll use to manage your Developer Hub and other deployments in future modules, and the latter will manage applications created by developers in your organization. Each application has unique permissions assigned to groups based on their roles, i.e platform engineer or developer.
+. Click **Settings > Projects** in the left sidebar.
++
+You should see the **pe-workshop** and *developer-apps* projects. The former is the GitOps Project you'll use to manage your Developer Hub and other deployments in future modules, and the latter will manage applications created by developers in your organization. Each application has unique RBAC permissions assigned to users/groups based on their roles, e.g platform engineer or developer.
 +
 image::explore-the-platform/argocd-appprojects.png["AppProject resources, as seen in the Argo CD UI",link=self,window=blank,align="center",width=700,title="AppProject resources, as seen in the Argo CD UI"]
 

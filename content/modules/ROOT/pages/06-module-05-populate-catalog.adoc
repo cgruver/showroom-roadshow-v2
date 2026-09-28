@@ -36,7 +36,7 @@ Each entity is defined in a YAML file (commonly named `catalog-info.yaml`) file 
 
 image::populate-catalog/entities-sample.png[Sample Entity relationship diagram from the upstream Backstage Documentation,link=self,window=blank,align="center",width=700,title=Sample Entity relationship diagram from the Backstage Documentation]
 
-Not every entity needs a hand-crafted YAML file, though. Providers (registered by plugins) often go further -- the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/02-sso-plugins/configmap-app-config-auth.yaml#L50-61[Keycloak provider you configured,window=gitlab] automatically imports users and groups from your identity provider, and CI/CD integrations can surface pipeline and deployment data without any catalog changes at all.
+Not every entity needs a hand-crafted YAML file, though. Providers (registered by plugins) often go further -- the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/02-sso-plugins/configmap-app-config-auth.yaml#L50-61[Keycloak provider you configured,window=gitlab] automatically generates User and Group entities using data from Keycloak, and CI/CD integrations can surface pipeline and deployment data without any catalog changes at all.
 
 == Exercise 1: Enable the Entities Overlay
 

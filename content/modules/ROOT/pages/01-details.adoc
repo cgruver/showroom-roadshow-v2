@@ -7,7 +7,7 @@ The workshop is split into multiple independent modules that can be completed in
 
 **Want to see results faster?** Modules 3 (GitOps Fundamentals), 4 (Secrets Management), and 5 (Namespace as a Product) provide foundational background knowledge but can be skipped if you're most interested in seeing the platform in action. Jump directly to the Developer Hub modules to experience the unified developer portal, software catalog with AI/agentic integration (MCP, Lightspeed), and self-service templates with automated supply chain security gates (SBOM generation, vulnerability scanning, compliance enforcement).
 
-IMPORTANT: Reead this page in its entirety to understand the environment and how to use the web terminal. 
+IMPORTANT: Read this page in its entirety to understand the environment and how to use the web terminal. 
 
 == Your environment
 
@@ -58,14 +58,6 @@ graph TD
 * **Keycloak** -- Identity and access management
 * **GitLab** -- Source code management
 * **Quay** -- Container image registry
-
-=== Credentials
-
-* **OpenShift console**: {openshift_cluster_console_url}
-* **Username**: `pe1` (Platform Engineer Persona), `dev1` (Developer Persona)
-* **Password**: {common_password}
-
-NOTE: The same credentials work for OpenShift, Argo CD (via OpenShift OAuth), Keycloak, GitLab, and Developer Hub.
 
 == How you'll work
 

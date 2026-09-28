@@ -46,7 +46,7 @@ image::self-service/rhdh-template-ui.png[Self-service UI in Developer Hub showin
 
 . Review the `template.yaml` file in the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/rhdh-template-developer-self-service/-/tree/main/quarkus-chatbot-rag[quarkus-chatbot-rag template repository in GitLab,window=gitlab] to understand the golden path it implements. The specific sections are in the `template.yaml` file:
 +
-NOTE: The `template.yaml` file is a manifest that Developer Hub reads to implement the self-service software template. Specifically, it defines *parameters*, *steps*, and *outputs* that the Platform Team uses to craft the self-service flow. Learn more by reading the https://backstage.io/docs/features/software-templates/[Backstage Software Templates documentation].
+NOTE: The `template.yaml` file is a manifest that Developer Hub reads to implement the self-service software template. Specifically, it defines *parameters*, *steps*, and *outputs* that the Platform Team uses to craft the self-service flow. Learn more by reading the https://backstage.io/docs/features/software-templates/[Backstage Software Templates documentation,window=backstage_docs].
 +
 .. **Captures user supplied parameters** -- such as the application name, group ownership, and a short description (for the generated `catalog-info.yaml`)
 .. **Scaffolds application code** -- generates a Quarkus application with LLM client dependencies and External Secrets integration for API keys

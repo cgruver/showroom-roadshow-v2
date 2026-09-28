@@ -7,7 +7,7 @@ Over the last three modules, you've worked with the building blocks of a well-ru
 
 This is where the developer portal comes in. Red Hat Developer Hub unifies these capabilities behind a self-service interface, so developers can discover services, create applications, and access their tools without needing to understand the underlying platform primitives. Your role as a member of the Platform Engineering team is to deploy and configure it.
 
-Instead of building and maintaining a custom Backstage container and associated JavaScript codebase using the Backstage project, you'll use Red Hat Developer Hub's https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes-native Custom Resource (CR)] to deploy and configure your instance using the  Red Hat Developer Hub Operator.
+Instead of building and maintaining a custom Backstage container and associated JavaScript codebase using the Backstage project, you'll use Red Hat Developer Hub's https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes-native Custom Resource (CR),window=k8s_docs] to deploy and configure your instance using the  Red Hat Developer Hub Operator.
 
 == Learning objectives
 
@@ -16,7 +16,6 @@ By the end of this module, you'll be able to:
 * Deploy Red Hat Developer Hub using the Backstage CR and Argo CD
 * Understand how the *Red Hat Developer Hub Operator* manages the deployment lifecycle of Backstage instances
 * Access your running Red Hat Developer Hub instance
-* Recognise how the platform primitives you've already learned (GitOps, secrets, namespaces) will be surfaced through the portal
 
 == Exercise 1: Explore the Configuration Files
 
@@ -29,7 +28,7 @@ image::m3/gitlab-files.png[Configuration base files in GitLab,link=self,window=b
 The *base/* folder contains files that are used to configure an instance of Red Hat Developer Hub, plus a _kustomization.yaml_ file - more on that last one later:
 
 * _backstage-cr.yaml_ - A minimal configuration to deploy your RHDH instance.
-* _configmap-app-config.yaml_ - Standard https://backstage.io/docs/conf/[Backstage configuration] file, stored in a Kubernetes https://kubernetes.io/docs/concepts/configuration/configmap/[ConfigMap].
+* _configmap-app-config.yaml_ - Standard https://backstage.io/docs/conf/[Backstage configuration,window=backstage_docs] file, stored in a Kubernetes https://kubernetes.io/docs/concepts/configuration/configmap/[ConfigMap,window=k8s_docs].
 * _configmap-dynamic-plugins.yaml_ - An RHDH specific configuration file that configures Backstage plugins at runtime.
 
 TIP: These files have inline comments that explain specific sections. It's recommended that you review each file and the comments to gain a better understanding of how they are used to configure Red Hat Developer Hub.
@@ -40,9 +39,9 @@ These three files are all you need to deploy and start customizing your internal
 
 === About Kustomize
 
-This workshop uses link:https://kustomize.io[Kustomize] https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays[overlays] to manage the layers of configuration that construct and enhance your internal developer portal. Argo CD supports both Kustomize and link:https://helm.sh[Helm] for rendering Kubernetes manifests, allowing us to use a set of base manifests to which we apply overrides per environment or per workshop module. We chose this approach to illustrate progressive enhancement of a Developer Hub deployment.
+This workshop uses link:https://kustomize.io[Kustomize,window=kustomize_docs] https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays[overlays,window=k8s_docs] to manage the layers of configuration that construct and enhance your internal developer portal. Argo CD supports both Kustomize and link:https://helm.sh[Helm,window=helm_docs] for rendering Kubernetes manifests, allowing us to use a set of base manifests to which we apply overrides per environment or per workshop module. We chose this approach to illustrate progressive enhancement of a Developer Hub deployment.
 
-https://kustomize.io/[Kustomize] uses the declarations in the _kustomization.yaml_ file to "render" your configuration files. This becomes more powerful in later modules as we layer on additional configuration properties and files.
+https://kustomize.io/[Kustomize,window=kustomize_docs] uses the declarations in the _kustomization.yaml_ file to "render" your configuration files. This becomes more powerful in later modules as we layer on additional configuration properties and files.
 
 Preview the Kustomize output in the terminal using the following commands:
 
@@ -106,7 +105,7 @@ In the Argo CD Application view, you should see:
 
 * Sync status: **Synced**
 * Health status: **Healthy**
-* Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol  (this takes up to 5 minutes as plugins ares unpacked)
+* Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol  (this takes up to 5 minutes as plugins are unpacked and installed)
 
 NOTE: It can take a few minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs you can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
 

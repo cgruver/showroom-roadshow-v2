@@ -27,7 +27,7 @@ graph TB
 
 Once connected, developers get a unified view of their platform without switching tools or filing tickets.
 
-TIP: Red Hat Build of Keycloak is used as a stand-in for your corporate identity provider for Developer Hub in this workshop. A complete list of supported identity providers can be found in the https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.10/html/authentication_in_red_hat_developer_hub/index[Developer Hub documentation]. The same principles apply for source control, CI, CD, etc.
+TIP: Red Hat Build of Keycloak is used as a stand-in for your corporate identity provider for Developer Hub in this workshop. A complete list of supported identity providers can be found in the https://docs.redhat.com/en/documentation/red_hat_developer_hub/1.10/html/authentication_in_red_hat_developer_hub/index[Developer Hub documentation,window=rh_docs]. The same principles apply for source control, CI, CD, etc.
 
 == Learning objectives
 
@@ -223,7 +223,7 @@ image::rhdh-integrations/synced-users.png["User Entities, synced into Developer 
 +
 image::rhdh-integrations/parasol-insurance-component.png["The Parasol Insurance application has been ingested from GitLab",link=self,window=blank,align="center",width=700,title="The Parasol Insurance application has been ingested from GitLab"]
 +
-TIP: A warning about missing relations will be shown on the Parasol Insurance component overview page. We'll fix that soon!
+TIP: A warning about missing relations will be shown on the Parasol Insurance component overview page. That'll be fixed after you finish the next module!
 +
 Click into the parasol-insurance component to explore data provided by the plugins:
 +
@@ -253,7 +253,7 @@ The integrations you just enabled are defined in two overlay files: https://gitl
 
 == Module summary
 
-Developer Hub is now a connected portal with corporate SSO and platform integrations.
+Developer Hub is now a connected portal with corporate SSO and platform integrations, providing a unified portal for developers to access application information, logs, CI pipelines, and more.
 
 **Key takeaway:**
 Developers now have a single place to view builds, issues, app health, and logs -- all gated by their corporate identity. Instead of switching between Jenkins, JIRA, and kubectl, they work from one unified portal. Onboarding new developers becomes seamless, since everything is in one place.
