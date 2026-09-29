@@ -2,7 +2,7 @@
 
 Welcome to the {{ workshop name }} workshop!
 
-== What you'll learn
+== What you will learn
 
 In this workshop, you will:
 

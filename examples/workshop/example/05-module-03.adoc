@@ -24,7 +24,7 @@ oc login --server=<your-cluster-url>
 oc new-project acme-applications --display-name="ACME Corporation Apps"
 ----
 
-* Verify you're in the correct project:
+* Verify you are in the correct project:
 +
 [source,role="execute"]
 ----

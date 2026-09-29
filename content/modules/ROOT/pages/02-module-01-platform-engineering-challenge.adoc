@@ -9,7 +9,7 @@ Sound familiar?
 
 == Learning objectives
 
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * Articulate the developer experience challenges that platform engineering addresses
 * Describe the concept of golden paths and why they matter
@@ -48,11 +48,11 @@ An IDP doesn't replace your existing tools -- it orchestrates them behind a self
 
 == Module summary
 
-You now understand the developer experience challenges that Parasol faces and the platform engineering approach you'll use to solve them. The key concepts to carry forward:
+You now understand the developer experience challenges that Parasol faces and the platform engineering approach you will use to solve them. The key concepts to carry forward:
 
 * **Golden paths (software templates)** make the right thing the easy thing -- pre-configured workflows that enforce standards while eliminating friction
 * **Red Hat Developer Hub** provides the unified portal that ties the platform together
-* **GitOps** is not just for applications -- you'll manage your platform and IDP configurations the same way
+* **GitOps** is not just for applications -- you will manage your platform and IDP configurations the same way
 
 **Next steps:**
-In Module 2, you'll explore the OpenShift cluster to see the application platform capabilities that form your IDP's foundation.
+In Module 2, you will explore the OpenShift cluster to see the application platform capabilities that form your IDP's foundation.

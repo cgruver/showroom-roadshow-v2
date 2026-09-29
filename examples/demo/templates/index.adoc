@@ -45,7 +45,7 @@ It will describe what you are going to show and why it is important.
 
 It is not a script for you to follow, so make sure you read it thoroughly and understand the what and the why of what you will show.
 
-You'll often find additional information covering:
+You will often find additional information covering:
 
 * Business Challenge
 * Technical Solution

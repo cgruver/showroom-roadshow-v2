@@ -369,7 +369,7 @@ Create compelling workshop experiences using user story elements:
 5. **Return with Elixir**: Mastery that transforms both learner and organization
 
 **Key User Story Components**:
-* **Role Definition**: "You're a [specific role] at [Company] facing [specific challenge]"
+* **Role Definition**: "You are a [specific role] at [Company] facing [specific challenge]"
 * **Mission Assignment**: "Your manager has asked you to [specific task] because [urgency/stakes]"
 * **Personal Stakes**: "Success means [career advancement/recognition], failure means [consequences]"
 * **Internal Dialogue**: "'[thoughts reflecting uncertainty, determination, or pressure]' you think"

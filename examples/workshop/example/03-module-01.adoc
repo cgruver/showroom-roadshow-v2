@@ -7,10 +7,10 @@ Your manager at ACME Corporation just assigned you to modernize the company's le
 
 ACME needs to deploy applications quickly and consistently across development, staging, and production environments. You've heard that containerization can help solve this challenge, but you need to experience it firsthand to understand the benefits.
 
-In this module, you'll experience how containers provide consistent, rapid application deployment.
+In this module, you will experience how containers provide consistent, rapid application deployment.
 
 == Learning objectives
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * Deploy a web application using containers in minutes instead of hours
 * Ensure consistent behavior across different environments

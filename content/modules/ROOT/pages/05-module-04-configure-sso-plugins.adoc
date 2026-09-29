@@ -5,7 +5,7 @@
 
 A developer portal with guest authentication and no integrations isn't very useful. Parasol's developers need to log in with their corporate identity and see their CI/CD pipelines, deployment topology, and application status -- all without leaving the portal.
 
-In this module, you'll connect Developer Hub to platform capabilities by configuring SSO authentication, enabling dynamic plugins, and integrating with platform services -- transforming it from a blank canvas into a connected portal.
+In this module, you will connect Developer Hub to platform capabilities by configuring SSO authentication, enabling dynamic plugins, and integrating with platform services -- transforming it from a blank canvas into a connected portal.
 
 [mermaid,svg,width=80%]
 ----
@@ -31,14 +31,14 @@ TIP: Red Hat Build of Keycloak is used as a stand-in for your corporate identity
 
 == Learning objectives
 
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * Connect Developer Hub to Keycloak for SSO authentication using OIDC
 * Enable dynamic plugins for CI/CD, GitOps, and Kubernetes integrations
 * Understand how ExternalSecrets connect Vault credentials to Developer Hub -- the same pattern you learned in Module 4, now applied at scale
 
 
-You'll also see how Kustomize overlays let you layer these additions on top of the base configuration without modifying the original files - this is just a little bonus learning, but isn't required when you embark on your own IDP journey.
+You will also see how Kustomize overlays let you layer these additions on top of the base configuration without modifying the original files - this is just a little bonus learning, but isn't required when you embark on your own IDP journey.
 
 :overlay-path: base
 include::partial$skip-ahead.adoc[]
@@ -51,7 +51,7 @@ The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-r
 * **Dynamic plugins** -- Tekton pipeline view, Argo CD deployment status, Kubernetes topology, GitLab integration, and a global header with links to platform tools
 * **ExternalSecrets** -- credentials for GitLab, Argo CD, and Kubernetes are pulled from Vault automatically, and used by Developer Hub plugins
 
-You'll update the Argo CD Applicatio that manages Developer Hub using `oc patch` from the terminal -- the same way a platform engineer would in automation or a script.
+You will update the Argo CD Applicatio that manages Developer Hub using `oc patch` from the terminal -- the same way a platform engineer would in automation or a script.
 
 . In the **Terminal** tab, verify the current Application configuration:
 +
@@ -73,9 +73,9 @@ While you wait for Developer Hub to rollout the new configuration, the next sect
 
 == Exercise 1: Vault, Keycloak, and External Secrets
 
-NOTE: We've done the prerequisite work of loading secret data in Vault for you. The key focus of this workshop is to learn the high-level configuration steps and understand the benefit you can provide to developer teams with Red Hat Developer Hub. You'll leave this workshop with an excellent template to start building out your own internal developer portal.
+NOTE: We've done the prerequisite work of loading secret data in Vault for you. The key focus of this workshop is to learn the high-level configuration steps and understand the benefit you can provide to developer teams with Red Hat Developer Hub. You will leave this workshop with an excellent template to start building out your own internal developer portal.
 
-Take a look at the pieces that have been pre-configured for this module. Vault was introduced in a prior module -- now you'll see how it can be used to provide secrets required by Developer Hub's plugins and integrations through ExternalSecrets to allow Developer Hub to ingest data from your platform components.
+Take a look at the pieces that have been pre-configured for this module. Vault was introduced in a prior module -- now you will see how it can be used to provide secrets required by Developer Hub's plugins and integrations through ExternalSecrets to allow Developer Hub to ingest data from your platform components.
 
 === How the pieces connect
 
@@ -147,7 +147,7 @@ echo "Token: $VAULT_TOKEN"
 . Navigate to `kv` > `secrets/` > `keycloak/` > `client-secret` then select the *Secret* tab
 +
 image::rhdh-integrations/vault-secrets.png["Secrets pre-created in Vault to save you some time",link=self,window=blank,align="center",width=700,title="Secrets pre-created in Vault to save you some time"]
-You'll see the `clientId` and `clientSecret` values that Developer Hub needs to connect to Keycloak. These are the same credentials referenced by the `backstage` client you just saw in Keycloak. 
+You will see the `clientId` and `clientSecret` values that Developer Hub needs to connect to Keycloak. These are the same credentials referenced by the `backstage` client you just saw in Keycloak. 
 
 The workshop has pre-populated the credentials in Vault to save time, but a platform team will typically add them to Vault as necessary to make them available to applications. If the Secret is updated in Vault, downstream applications will receeive the new value automatically.
 
@@ -177,7 +177,7 @@ Developer Hub is now configured with Keycloak OIDC authentication. Guest access 
 
 [NOTE]
 ====
-You'll need to wait until the new Pod in your `developer-hub` Argo CD Application has finished rolling out. Use the following command to observe and wait for a successful rollout:
+You will need to wait until the new Pod in your `developer-hub` Argo CD Application has finished rolling out. Use the following command to observe and wait for a successful rollout:
 
 [source,bash,role="execute",subs="attributes+"]
 ----
@@ -243,7 +243,7 @@ The `catalog-info.yaml` file is a special Backstage entity descriptor that tells
 * **API references** -- which APIs this component provides or consumes
 * **Annotations** -- integration hooks for Kubernetes (`backstage.io/kubernetes-id`), Tekton (`janus-idp.io/tekton`), JIRA (`jira/project-key`), Quay (`quay.io/repository-slug`), and SonarQube (`sonarqube.org/project-key`)
 
-Developer Hub reads these annotations to wire up the CI/CD tab (Tekton pipelines), Topology tab (Kubernetes resources), Overview tab (JIRA issues), and SonarQube scan results you just explored. The component's developers can maintain this file in source control alongside their code, or externally as you'll see in the next module.
+Developer Hub reads these annotations to wire up the CI/CD tab (Tekton pipelines), Topology tab (Kubernetes resources), Overview tab (JIRA issues), and SonarQube scan results you just explored. The component's developers can maintain this file in source control alongside their code, or externally as you will see in the next module.
 ====
 
 The integrations you just enabled are defined in two overlay files: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/02-sso-plugins/patches/dynamic-plugins.yaml[dynamic-plugins.yaml,window=gitlab] lists the plugins (Keycloak, GitLab, Argo CD, Kubernetes, Tekton), and https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-rhdh-configs/-/blob/main/overlays/02-sso-plugins/configmap-app-config-auth.yaml[configmap-app-config-auth.yaml,window=gitlab] contains their configuration (OIDC settings, API endpoints, authentication providers).
@@ -256,4 +256,4 @@ Developer Hub is now a connected portal with corporate SSO and platform integrat
 Developers now have a single place to view builds, issues, app health, and logs -- all gated by their corporate identity. Instead of switching between Jenkins, JIRA, and kubectl, they work from one unified portal. Onboarding new developers becomes seamless, since everything is in one place.
 
 **Next steps:**
-In the next module, you'll populate the software catalog with Parasol's services, documentation and APIs, giving developers and AI agents a single place to understand the organisation's software landscape.
+In the next module, you will populate the software catalog with Parasol's services, documentation and APIs, giving developers and AI agents a single place to understand the organisation's software landscape.

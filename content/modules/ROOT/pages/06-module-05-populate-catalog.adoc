@@ -7,14 +7,14 @@ How often have you needed to find API documentation for a service, or figure out
 
 Right now, Developer Hub is connected to your platform but the catalog is pretty bare with only the *Parasol Insurance* application used in the prior section. Parasol's developers and their agentic coding harnesses can't discover services, APIs, or documentation because nobody has registered them yet.
 
-In this module, you'll register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable **map of the entire software landscape for AI agents and humans** and expose it to **agents via Model Context Protocol (MCP)**.
+In this module, you will register Parasol's existing software architecture in the catalog -- Systems, Components, APIs, Resources, and documentation -- creating a navigable **map of the entire software landscape for AI agents and humans** and expose it to **agents via Model Context Protocol (MCP)**.
 
 :overlay-path: overlays/02-sso-plugins
 include::partial$skip-ahead.adoc[]
 
 == Learning objectives
 
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * Understand the Backstage entity model (Components, Systems, APIs, Resources, Domains)
 * Visualize system architecture using System Diagrams and relationship graphs
@@ -40,7 +40,7 @@ Not every entity needs a hand-crafted YAML file, though. Providers (registered b
 
 == Exercise 1: Enable the Entities Overlay
 
-Parasol's Platform Team have already used generative AI to map out Entities corresponding to their existing domains, systems, APIs, and components. You'll view these files in a moment, but first let's get Developer Hub to start ingesting them.
+Parasol's Platform Team have already used generative AI to map out Entities corresponding to their existing domains, systems, APIs, and components. You will view these files in a moment, but first let's get Developer Hub to start ingesting them.
 
 . In the **Argo CD** tab, click on your **developer-hub** Application
 
@@ -69,11 +69,11 @@ image::populate-catalog/gitlab-projectslist-entities.png[The `parasol-entities` 
 This is the **catalog index** -- a specialized Location entity that references all of Parasol's architecture definitions in the `spec.targets` array.
 . Explore the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/tree/main/techdocs/domains/billing-payments[techdocs/domains/billing-payments/,window=gitlab] directory to see how documentation can be stored
 +
-This directory contains Markdown documentation for the Billing & Payments domain, including PCI-DSS compliance information you'll explore later. While this example stores documentation in a dedicated repository, teams can also store docs alongside their component's source code if they prefer.
+This directory contains Markdown documentation for the Billing & Payments domain, including PCI-DSS compliance information you will explore later. While this example stores documentation in a dedicated repository, teams can also store docs alongside their component's source code if they prefer.
 
 . Open one of the component files, such as https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-entities/-/blob/main/components/parasol-catalog-claims.yaml[components/parasol-catalog-claims.yaml,window=gitlab]
 +
-See how each component specifies its type, lifecycle, owner, system membership, and API dependencies. This metadata is what powers the System Diagrams and relationship graphs you'll explore next.
+See how each component specifies its type, lifecycle, owner, system membership, and API dependencies. This metadata is what powers the System Diagrams and relationship graphs you will explore next.
 
 == Exercise 3: Explore the catalog in Developer Hub
 
@@ -81,7 +81,7 @@ Developer Hub is now importing the entity definitions you just explored in GitLa
 
 [NOTE]
 ====
-You'll need to wait until the new Developer Hub pod has finished rolling out. Use the following command to observe and wait for a successful rollout:
+You will need to wait until the new Developer Hub pod has finished rolling out. Use the following command to observe and wait for a successful rollout:
 
 [source,bash,role="execute",subs="attributes+"]
 ----
@@ -100,7 +100,7 @@ image::populate-catalog/catalog-populated.png[Developer Hub catalog showing Syst
 
 . Click the **System Diagram** button (near the top of the page)
 +
-This diagram visualizes Parasol's software architecture at scale. Each box represents a Component (service), and the lines show API dependencies between them. You're seeing the entity definitions you just imported -- Domains, Systems, Components, APIs, and Resources -- rendered as an interactive graph.
+This diagram visualizes Parasol's software architecture at scale. Each box represents a Component (service), and the lines show API dependencies between them. You are seeing the entity definitions you just imported -- Domains, Systems, Components, APIs, and Resources -- rendered as an interactive graph.
 +
 Notice how the diagram shows:
 +
@@ -129,7 +129,7 @@ image::populate-catalog/relationships-graph.png["The API Gateway System relation
 image::populate-catalog/docs-list.png[The TechDocs list in Developer Hub,link=self,window=blank,align="center",width=700,title=The TechDocs list in Developer Hub]
 
 +
-You're now viewing domain-level documentation that lives alongside the catalog entities. This includes:
+You are now viewing domain-level documentation that lives alongside the catalog entities. This includes:
 +
 * **Architecture decision records (ADRs)** explaining why the Billing system is structured this way
 * **PCI-DSS compliance information** documenting how payment data is handled securely
@@ -228,4 +228,4 @@ The catalog isn't just documentation -- it's **operational intelligence** access
 
 **Next steps:**
 
-In the next module, you'll see how developers use golden-path templates to create new applications. These applications implement secure software supply chain practices, use standardized build and deployment manifests, and automatically register themselves in this catalog, continuing the cycle of discoverable, AI-queryable platform intelligence.
+In the next module, you will see how developers use golden-path templates to create new applications. These applications implement secure software supply chain practices, use standardized build and deployment manifests, and automatically register themselves in this catalog, continuing the cycle of discoverable, AI-queryable platform intelligence.
