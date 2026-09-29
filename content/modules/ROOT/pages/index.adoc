@@ -54,8 +54,8 @@ You will progressively build Parasol's IDP using a GitOps-driven approach:
 . **Deploy a Developer Portal** -- Use Argo CD to deploy a minimal instance of Red Hat Developer Hub (based on https://backstage.io/[CNCF's Backstage,window=backstage_docs])
 . **Connect Developer Hub to the platform** -- Add authentication, CI/CD visibility, Kubernetes and JIRA integrations, and OpenShift plugins
 . **Build Context for Agents and Developers** -- Register systems, components, APIs, and documentation in Developer Hub; query them with Lightspeed for Developer Hub via MCP
-. **Enable self-service templates** -- Experience the golden path: create secure, compliant, production-ready applications in minutes with zero YAML
-. **Launch AI-enabled development environments** -- Use OpenShift Dev Spaces to provide developers with standardized, browser-based workspaces with AI coding assistance built-in
+. **Enable self-service templates** -- Experience the golden path: create secure, compliant, and production-ready applications in minutes with zero YAML
+. **Launch AI-enabled development environments** -- Use OpenShift Dev Spaces to provide developers with standardized, browser-based workspaces with agentic AI coding assistance built-in
 
 Each step builds on the previous one. You will advance through configurations using Argo CD -- no hand-crafted YAML required.
 

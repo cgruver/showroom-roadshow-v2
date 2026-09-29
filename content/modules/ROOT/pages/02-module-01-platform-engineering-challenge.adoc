@@ -3,7 +3,7 @@
 :toc: macro
 :toclevels: 1
 
-Parasol Insurance is growing fast. New product lines, new teams, new developers -- but the platform team can't keep up. Every new team needs a custom CI/CD setup, their own namespace provisioning, and a weeks-long onboarding process. Developers spend more time filing tickets and waiting for access than they do writing code.
+Parasol Insurance is an established company, but also growing fast. New product lines, new teams, and new developers in addition to all of the existing applications that drive value for the business.  The platform team simply can't keep up. Every new team needs a custom CI/CD setup, namespace provisioning, RBAC, and a weeks-long onboarding process.  The evolution of existing applications faces similar challenges.  Developers spend more time filing tickets, waiting for access, and waiting for platform changes than they do writing code.
 
 Sound familiar?
 

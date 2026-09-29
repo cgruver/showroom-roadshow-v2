@@ -35,7 +35,7 @@ graph TD
     end
 
     subgraph workspace ["Development"]
-        DS["DevSpaces"]
+        DS["Dev Spaces"]
     end
 
     RHDH -->|scaffolds repos| GL
@@ -53,7 +53,7 @@ graph TD
 * **OpenShift GitOps (Argo CD)** -- Declarative, Git-driven deployment
 * **OpenShift Pipelines (Tekton)** -- Cloud-native CI/CD
 * **Red Hat Developer Hub Operator** -- Backstage-based developer portal
-* **OpenShift DevSpaces** -- Cloud development workspaces
+* **OpenShift Dev Spaces** -- Cloud development workspaces
 * **HashiCorp Vault + External Secrets** -- Centralised secrets management
 * **Keycloak** -- Identity and access management
 * **GitLab** -- Source code management
