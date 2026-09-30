@@ -25,7 +25,7 @@ Platform engineering exists because the traditional model breaks down at scale. 
 * **Security gaps** -- Without guardrails, teams skip scanning, signing, and compliance steps because the "official" process is too slow
 * **Knowledge silos** -- No single place to discover what services exist, who owns them, or how they connect
 
-At Parasol, these problems are real. The API team can't find documentation for the store service. The security team doesn't know which images are signed. New developers take two weeks to get productive.
+At Parasol, these problems are real. The API team can't find documentation for the store service. The security team doesn't know which images are signed, or what code revision a given image was built from. New developers take two weeks to get productive.
 
 == The solution: an Internal Developer Platform
 
@@ -34,13 +34,13 @@ An IDP doesn't replace your existing tools -- it orchestrates them behind a self
 **For developers**, the IDP provides:
 
 * **A software catalog** -- Discover services, APIs, owners, and documentation in one place; expose it to AI agents and coding assistants via MCP and REST APIs
-* **Software templates** -- Create new applications from pre-approved blueprints with CI/CD, security scanning, and GitOps deployment baked in
+* **Software templates** -- Create new applications, or refactor old ones from pre-approved blueprints with CI/CD, security scanning, and GitOps deployment baked in
 * **Integrated tooling** -- See pipeline status, deployment topology, Kubernetes resources, and logs without switching between consoles
 * **AI assistance** -- Query the catalog with natural language, get context-aware code suggestions, and let AI agents navigate the platform autonomously
 
 **For platform teams**, the IDP provides:
 
-* **Application platform capabilities** -- Reusable OpenShift operators and Helm charts for GitOps (Argo CD), CI/CD (Tekton), secrets management (Vault + External Secrets), identity (Keycloak), and container registries (Quay); standardized deployments reduce cognitive load for ops/SRE teams and make troubleshooting consistent across environments
+* **Application platform capabilities** -- Reusable OpenShift operators and Helm charts for GitOps driven CD (Argo CD), CI Pipelines (Tekton), secrets management (Vault + External Secrets), identity (Keycloak), and container registries (Quay); standardized deployments reduce cognitive load for ops/SRE teams and make troubleshooting consistent across environments
 * **Software supply chain security** -- Automated SBOM generation, dependency and image vulnerability scanning, policy enforcement, and attestation in every pipeline -- security gates are built in, not optional, so leadership gets guaranteed compliance without slowing developers down
 * **Standardized infrastructure** -- Golden-path templates encode security gates, resource limits, network policies, and observability once; every application inherits the same standards
 * **Centralized secrets management** -- Vault integration via External Secrets Operator eliminates secrets in Git and provides rotation, auditing, and least-privilege access
