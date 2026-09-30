@@ -36,8 +36,11 @@ A namespace on its own is just an empty box. A _managed_ namespace includes ever
 |**LimitRange**
 |Sets per-container defaults and maximums so developers don't need to guess what to request
 
+|**ClusterRole**
+|Enables a least-privilege approach to RBAC.  Roles and ClusterRoles allow administrators to create RBAC enabling developers and applications to perform CRUD operations on exactly what they need to do their job in the OpenShift cluster.
+
 |**RoleBinding**
-|Grants the team `managed-namespace` access to their namespace -- and nothing else
+|Grants the team `managed-namespace` RBAC in their namespace -- and nothing else
 
 |**NetworkPolicy**
 |Controls which pods can talk to each other -- in this case, only pods within the same namespace
@@ -57,15 +60,9 @@ image::ns-aas/ns-files.png["Namespace as a Service files in GitLab",link=self,wi
 .. `limit-range.yaml` -- Sets a per-container maximum of 256Mi memory and defaults each container to 128Mi if no request is specified
 .. `role-binding.yaml` -- Grants the `managed-namespace` ClusterRole to users `dev1` and `dev2` in the `dev-team-alpha` namespace only
 .. `network-policy.yaml` -- Denies all inbound traffic except from pods within the same namespace
+.. `managed-namespace-clusterrole.yaml` -- Allows developers to perform CRUD operations on exactly what they need to do their job, while protecting developers from modifying the environment in ways that they should not. 
 
 These files define a complete, self-contained environment for a development team.
-
-NOTE: The `managed-namespace` ClusterRole was created for you as part of the GitOps automation that provisioned this workshop.  You can take a look at what it allows developers create and view by running the following command in the **Terminal** tab:
-
-[source,bash,role="execute",subs="attributes+"]
-----
-oc get clusterrole managed-namespace -o yaml
-----
 
 == Exercise 2: Deploy via Argo CD
 

@@ -51,7 +51,7 @@ The https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-r
 * **Dynamic plugins** -- Tekton pipeline view, Argo CD deployment status, Kubernetes topology, GitLab integration, and a global header with links to platform tools
 * **ExternalSecrets** -- credentials for GitLab, Argo CD, and Kubernetes are pulled from Vault automatically, and used by Developer Hub plugins
 
-You will update the Argo CD Applicatio that manages Developer Hub using `oc patch` from the terminal -- the same way a platform engineer would in automation or a script.
+You will update the Argo CD Application that manages Developer Hub using `oc patch` from the terminal -- the same way a platform engineer would in automation or a script.
 
 . In the **Terminal** tab, verify the current Application configuration:
 +
@@ -206,7 +206,7 @@ image::rhdh-integrations/header-identity.png["Developer Hub header showing ident
 
 With our chosen dynamic plugins enabled, Developer Hub now connects to the platform services running on the cluster. Off-cluster services are also supported, but for this workshop everything is contained within the workshop environment.
 
-. Navigate to **Settings** and confirm your user identity is shown -- this is your Keycloak profile, synced into Developer Hub.
+. Click on your identity in the top right corner, navigate to **Settings** and confirm your user identity is shown -- this is your Keycloak profile, synced into Developer Hub.
 +
 TIP: Use the *Pin Sidebar* toggle to make the sidebar collapse as seen in the following image.
 +
