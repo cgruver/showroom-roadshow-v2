@@ -5,7 +5,7 @@
 
 == Your role and mission
 
-You're {{ persona/role }} at {{ Company name }}, and you've been assigned to evaluate {{ technology }} for an important project.
+You are {{ persona/role }} at {{ Company name }}, and you've been assigned to evaluate {{ technology }} for an important project.
 
 {{ Company name }} needs to {{ business requirement }} for {{ project context }}. Your manager has explained: "{{ quote explaining project importance and technical requirements }}."
 
@@ -15,7 +15,7 @@ You're {{ persona/role }} at {{ Company name }}, and you've been assigned to eva
 
 == Success criteria for your mission
 
-By the end of this workshop, you'll have practical {{ technology }} skills to address {{ Company name }}'s project requirements:
+By the end of this workshop, you will have practical {{ technology }} skills to address {{ Company name }}'s project requirements:
 
 * {{ Learning objective 1 }} → {{ specific technical outcome }}
 * {{ Learning objective 2 }} → {{ business efficiency improvement }}

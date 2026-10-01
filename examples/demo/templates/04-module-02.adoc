@@ -20,7 +20,7 @@ _Effective demos follow a specific timing structure that keeps customers engaged
 * Keeps total demo under 30 minutes (customer attention span)
 * Balances business context with technical demonstration
 * Leaves time for meaningful interaction and questions
-* Follows the "tell them what you'll show, show them, tell them what you showed" principle
+* Follows the "tell them what you will show, show them, tell them what you showed" principle
 
 === Show
 * Study the timing structure in your demo:
@@ -221,7 +221,7 @@ The demo shows how your customer can go from 3-5 day environment setup to 5-minu
 
 * Prepare for Module 03:
   * This module covers advanced techniques and customization
-  * You'll learn how to adapt these OpenShift/Ansible examples for different audiences
+  * You will learn how to adapt these OpenShift/Ansible examples for different audiences
   * Practice the timing and flow techniques from this module
 
 == Key Takeaways

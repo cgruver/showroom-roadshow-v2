@@ -7,10 +7,10 @@
 
 {{ Company name }} needs {{ urgent business requirement }}, and you've been tasked with {{ specific responsibility }}. {{ Technology }} can help solve this challenge, but you need to {{ specific skill or capability }}.
 
-In this module, you'll experience firsthand how {{ technology }} {{ primary benefit or capability }}.
+In this module, you will experience firsthand how {{ technology }} {{ primary benefit or capability }}.
 
 == Learning objectives
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * {{ Learning objective 1 with specific outcome }}
 * {{ Learning objective 2 with measurable skill }}

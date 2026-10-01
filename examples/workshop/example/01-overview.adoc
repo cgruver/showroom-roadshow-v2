@@ -5,7 +5,7 @@
 
 == Your role and mission
 
-You're a senior developer at ACME Corporation, and you've been assigned to evaluate containerization for an important client project.
+You are a senior developer at ACME Corporation, and you've been assigned to evaluate containerization for an important client project.
 
 ACME needs to improve deployment times for a key client contract. Your manager has explained: "We need to reduce deployment times significantly to meet client expectations and project timelines."
 
@@ -15,7 +15,7 @@ ACME needs to improve deployment times for a key client contract. Your manager h
 
 == Success criteria for your mission
 
-By the end of this workshop, you'll have practical container skills to address ACME's deployment challenges:
+By the end of this workshop, you will have practical container skills to address ACME's deployment challenges:
 
 * Create and manage container images using industry best practices → **ensure consistent deployments across environments**
 * Deploy containerized applications to Red Hat OpenShift efficiently → **demonstrate significantly faster deployment times**
@@ -23,7 +23,7 @@ By the end of this workshop, you'll have practical container skills to address A
 * Implement CI/CD workflows that reduce manual deployment steps → **improve development team efficiency**
 * Troubleshoot common container deployment issues → **maintain reliable production systems**
 
-**Technical outcome**: You'll have hands-on experience with container technology that directly applies to ACME's current challenges.
+**Technical outcome**: You will have hands-on experience with container technology that directly applies to ACME's current challenges.
 
 **Business benefit**: Proven deployment approach that reduces time-to-market and improves operational reliability.
 

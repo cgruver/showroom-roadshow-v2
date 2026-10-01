@@ -3,13 +3,13 @@
 :toc: macro
 :toclevels: 1
 
-Parasol Insurance is growing fast. New product lines, new teams, new developers -- but the platform team can't keep up. Every new team needs a custom CI/CD setup, their own namespace provisioning, and a weeks-long onboarding process. Developers spend more time filing tickets and waiting for access than they do writing code.
+Parasol Insurance is an established company, but also growing fast. New product lines, new teams, and new developers in addition to all of the existing applications that drive value for the business.  The platform team simply can't keep up. Every new team needs a custom CI/CD setup, namespace provisioning, RBAC, and a weeks-long onboarding process.  The evolution of existing applications faces similar challenges.  Developers spend more time filing tickets, waiting for access, and waiting for platform changes than they do writing code.
 
 Sound familiar?
 
 == Learning objectives
 
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * Articulate the developer experience challenges that platform engineering addresses
 * Describe the concept of golden paths and why they matter
@@ -25,7 +25,7 @@ Platform engineering exists because the traditional model breaks down at scale. 
 * **Security gaps** -- Without guardrails, teams skip scanning, signing, and compliance steps because the "official" process is too slow
 * **Knowledge silos** -- No single place to discover what services exist, who owns them, or how they connect
 
-At Parasol, these problems are real. The API team can't find documentation for the store service. The security team doesn't know which images are signed. New developers take two weeks to get productive.
+At Parasol, these problems are real. The API team can't find documentation for the store service. The security team doesn't know which images are signed, or what code revision a given image was built from. New developers take two weeks to get productive.
 
 == The solution: an Internal Developer Platform
 
@@ -34,13 +34,13 @@ An IDP doesn't replace your existing tools -- it orchestrates them behind a self
 **For developers**, the IDP provides:
 
 * **A software catalog** -- Discover services, APIs, owners, and documentation in one place; expose it to AI agents and coding assistants via MCP and REST APIs
-* **Software templates** -- Create new applications from pre-approved blueprints with CI/CD, security scanning, and GitOps deployment baked in
+* **Software templates** -- Create new applications, or refactor old ones from pre-approved blueprints with CI/CD, security scanning, and GitOps deployment baked in
 * **Integrated tooling** -- See pipeline status, deployment topology, Kubernetes resources, and logs without switching between consoles
 * **AI assistance** -- Query the catalog with natural language, get context-aware code suggestions, and let AI agents navigate the platform autonomously
 
 **For platform teams**, the IDP provides:
 
-* **Application platform capabilities** -- Reusable OpenShift operators and Helm charts for GitOps (Argo CD), CI/CD (Tekton), secrets management (Vault + External Secrets), identity (Keycloak), and container registries (Quay); standardized deployments reduce cognitive load for ops/SRE teams and make troubleshooting consistent across environments
+* **Application platform capabilities** -- Reusable OpenShift operators and Helm charts for GitOps driven CD (Argo CD), CI Pipelines (Tekton), secrets management (Vault + External Secrets), identity (Keycloak), and container registries (Quay); standardized deployments reduce cognitive load for ops/SRE teams and make troubleshooting consistent across environments
 * **Software supply chain security** -- Automated SBOM generation, dependency and image vulnerability scanning, policy enforcement, and attestation in every pipeline -- security gates are built in, not optional, so leadership gets guaranteed compliance without slowing developers down
 * **Standardized infrastructure** -- Golden-path templates encode security gates, resource limits, network policies, and observability once; every application inherits the same standards
 * **Centralized secrets management** -- Vault integration via External Secrets Operator eliminates secrets in Git and provides rotation, auditing, and least-privilege access
@@ -48,11 +48,11 @@ An IDP doesn't replace your existing tools -- it orchestrates them behind a self
 
 == Module summary
 
-You now understand the developer experience challenges that Parasol faces and the platform engineering approach you'll use to solve them. The key concepts to carry forward:
+You now understand the developer experience challenges that Parasol faces and the platform engineering approach you will use to solve them. The key concepts to carry forward:
 
 * **Golden paths (software templates)** make the right thing the easy thing -- pre-configured workflows that enforce standards while eliminating friction
 * **Red Hat Developer Hub** provides the unified portal that ties the platform together
-* **GitOps** is not just for applications -- you'll manage your platform and IDP configurations the same way
+* **GitOps** is not just for applications -- you will manage your platform and IDP configurations the same way
 
 **Next steps:**
-In Module 2, you'll explore the OpenShift cluster to see the application platform capabilities that form your IDP's foundation.
+In Module 2, you will explore the OpenShift cluster to see the application platform capabilities that form your IDP's foundation.

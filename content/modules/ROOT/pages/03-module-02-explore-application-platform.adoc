@@ -5,11 +5,11 @@
 
 Before you build the developer portal, you need to understand the cloud-native tools that Parasol is adopting using OpenShift. OpenShift is more than a container runtime -- it's an **application platform** with integrated CI/CD, GitOps, Cloud Development Environments (CDE), and secrets management. These capabilities form the foundation of your own internal developer platform.
 
-In this module, you'll log into the OpenShift console and Argo CD to see what's available and understand how the infrastructure is managed.
+In this module, you will log into the OpenShift console and Argo CD to see what's available and understand how the infrastructure is managed.
 
 == Learning objectives
 
-By the end of this module, you'll be able to:
+By the end of this module, you will be able to:
 
 * Identify the pre-installed operators that provide application platform capabilities
 * Log into Argo CD and understand the app-of-apps deployment pattern and it's use of RBAC
@@ -33,7 +33,7 @@ TIP: The *Installed Operators* page can take a moment to discover and list every
 * **Red Hat OpenShift GitOps** -- Argo CD for declarative deployments
 * **Red Hat OpenShift Pipelines** -- Tekton for CI/CD pipelines
 * **Red Hat OpenShift Dev Spaces** -- Cloud development workspaces
-* **Red Hat Developer Hub** -- The Backstage-based developer portal you'll configure
+* **Red Hat Developer Hub** -- The Backstage-based developer portal you will configure
 +
 image::explore-the-platform/operators-list.png[Red Hat Operators list in the OpenShift Web Console,link=self,window=blank,align="center",width=700,title=Red Hat Operators list in the OpenShift Web Console]
 . Note the other operators present on the cluster. These provide additional platform capabilities:
@@ -48,7 +48,7 @@ You should see all operators listed with a status of **Succeeded** in the Instal
 
 == Exercise 2: Login and Explore Argo CD
 
-Argo CD manages the cluster infrastructure using a pattern called https://argo-cd.readthedocs.io/en/latest/operator-manual/cluster-bootstrapping/#app-of-apps-pattern-alternative[**app-of-apps**,window=argocd_docs] -- a single parent Application that deploys and manages all the child Applications (GitLab, Keycloak, Vault, Pipelines, and more). You'll use this same pattern to manage your Developer Hub configuration.
+Argo CD manages the cluster infrastructure using a pattern called https://argo-cd.readthedocs.io/en/latest/operator-manual/cluster-bootstrapping/#app-of-apps-pattern-alternative[**app-of-apps**,window=argocd_docs] -- a single parent Application that deploys and manages all the child Applications (GitLab, Keycloak, Vault, Pipelines, and more). You will use this same pattern to manage your Developer Hub configuration.
 
 . Select the **Argo CD** tab on the right
 
@@ -59,7 +59,7 @@ Argo CD manages the cluster infrastructure using a pattern called https://argo-c
 +
 You may need to authorise access when prompted.
 
-. Once logged in, explore the Applications view. You'll see the infrastructure apps that were deployed by the workshop environment:
+. Once logged in, explore the Applications view. You will see the infrastructure apps that were deployed by the workshop environment:
 +
 image::explore-the-platform/argocd-apps.png[Application configurations in the Argo CD UI,link=self,window=blank,align="center",width=700,title=Application configurations in the Argo CD UI]
 +
@@ -75,7 +75,7 @@ NOTE: You have **read-only** access to the `default` project in Argo CD. You can
 +
 . Click **Settings > Projects** in the left sidebar.
 +
-You should see the **pe-workshop** and *developer-apps* projects. The former is the GitOps Project you'll use to manage your Developer Hub and other deployments in future modules, and the latter will manage applications created by developers in your organization. Each application has unique RBAC permissions assigned to users/groups based on their roles, e.g platform engineer or developer.
+You should see the **pe-workshop** and *developer-apps* projects. The former is the GitOps Project you will use to manage your Developer Hub and other deployments in future modules, and the latter will manage applications created by developers in your organization. Each application has unique RBAC permissions assigned to users/groups based on their roles, e.g platform engineer or developer.
 +
 image::explore-the-platform/argocd-appprojects.png["AppProject resources, as seen in the Argo CD UI",link=self,window=blank,align="center",width=700,title="AppProject resources, as seen in the Argo CD UI"]
 
@@ -88,11 +88,11 @@ Parasol has already started migrating to **OpenShift Pipelines** (based on Tekto
 . Use the *Project* dropdown to select *parasol-insurance-build*
 . In the Pipelines list, locate the **parasol-insurance-tag** pipeline, then click the link in the **Last Run** column to view the most recent execution
 +
-This pipeline demonstrates Tekton's cloud-native approach to CI/CD. Each task runs in its own container, and the pipeline is defined as Kubernetes custom resources rather than scripted configuration. In later modules, you'll see how software templates can generate similar pipelines automatically for new applications -- complete with security scanning, SBOM generation, and GitOps integration.
+This pipeline demonstrates Tekton's cloud-native approach to CI/CD. Each task runs in its own container, and the pipeline is defined as Kubernetes custom resources rather than scripted configuration. In later modules, you will see how software templates can generate similar pipelines automatically for new applications -- complete with security scanning, SBOM generation, and GitOps integration.
 +
 image::explore-the-platform/ocp-pipelinerun.png["A PipelineRun for the parasol-insurance application, in the OpenShift Web Console",link=self,window=blank,align="center",width=700,title="A PipelineRun for the parasol-insurance application, in the OpenShift Web Console"]
 
-The team working on *parasol-insurance* were first to migrate to OpenShift Pipelines and OpenShift GitOps-based deployments. Future applications will build on their example, as you'll see in later modules when you craft a golden-path for new applications to follow the same template.
+The team working on *parasol-insurance* were first to migrate to OpenShift Pipelines and OpenShift GitOps-based deployments. Future applications will build on their example, as you will see in later modules when you craft a golden-path for new applications to follow the same template.
 
 == Module summary
 
@@ -106,4 +106,4 @@ You've explored the application platform capabilities available on the cluster a
 * The building blocks are in place -- now you need to wire them together through Developer Hub
 
 **Next steps:**
-In Module 3, you'll deploy your first Developer Hub instance using Argo CD and the `pe-workshop` project.
+In Module 3, you will deploy your first Developer Hub instance using Argo CD and the `pe-workshop` project.
