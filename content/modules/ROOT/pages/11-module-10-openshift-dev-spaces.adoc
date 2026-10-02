@@ -7,3 +7,24 @@ Parasol's developers can now utilize self-service templates to provision new app
 
 We will now make that happen with OpenShift Dev Spaces.
 
+== Learning objectives
+
+By the end of this module, you will be able to:
+
+* Create an instance of OpenShift Dev Spaces using the CheCluster custom resource
+* Launch a workspace from a git repository
+* Connect Dev Spaces to an internally hosted VS Code extension registry
+* Add guardrails to Dev Spaces to set limits for CPU, Memory, and Storage use
+* Create centrally managed configurations for AI harnesses
+
+== Exercise 1: Deploy an instance of OpenShift Dev Spaces
+
+== Exercise 2: Launch a workspace for Parasol Insurance development
+
+== Exercise 3: Modify the Dev Spaces instance to use a self-hosted VS Code extension registry.
+
+== Exercise 4: Add some guardrails to developer workspaces
+
+== Exercise 5: Enable an AI harness for AI enhanced development
+
+== Module summary
