@@ -230,6 +230,8 @@ Remove the managed namespace Application.
 oc delete application managed-namespace -n openshift-gitops
 ----
 
+TIP: The `oc delete` command will take a moment to complete. This is because it waits for Argo CD to delete the underlying resources. 
+
 Verify the namespace and all its resources are gone:
 
 [source,bash,role="execute",subs="attributes+"]

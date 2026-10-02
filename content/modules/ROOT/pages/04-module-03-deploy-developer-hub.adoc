@@ -107,7 +107,7 @@ In the Argo CD Application view, you should see:
 * Health status: **Healthy**
 * Child resources, including a `backstage-developer-hub` Pod showing a green heart symbol
 
-NOTE: It can take up to 5 minutes for the initial Pod deployment to complete, as it needs to unpack and install core Backstage and Developer Hub plugins. To observe the logs you can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
+NOTE: It can take up to 5 minutes for the initial Pod deployment to complete, as it needs to pull container images, unpack and install core Backstage and Developer Hub plugins. To observe the logs you can click the Pod in the Argo CD UI, select **Logs**, then choose `install-dynamic-plugins` in the dropdown above the log stream.
 
 == Exercise 3: Access Developer Hub
 
