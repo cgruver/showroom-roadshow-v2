@@ -1,0 +1,9 @@
+= Module 7: Enable a Cloud IDE for developers
+:source-highlighter: rouge
+:toc: macro
+:toclevels: 1
+
+Parasol's developers can now utilize self-service templates to provision new application environments.  Let us now take this to another level and enable developers to provision full development environments.  Imagine a world where the developers can; maintain legacy applications, add new features to growing applications, and create greenfield applications, all without having to fight with tools, dependencies, configuration, and resource constraints on their local workstations.
+
+We will now make that happen with OpenShift Dev Spaces.
+
