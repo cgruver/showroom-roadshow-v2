@@ -1,4 +1,4 @@
-= Module 7: Enable a Cloud IDE for developers
+= Module 10: Enable a Cloud IDE for developers
 :source-highlighter: rouge
 :toc: macro
 :toclevels: 1

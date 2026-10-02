@@ -1,4 +1,4 @@
-= Module 5: Build Context for Agents and Developers
+= Module 8: Build Context for Agents and Developers
 :source-highlighter: rouge
 :toc: macro
 :toclevels: 1

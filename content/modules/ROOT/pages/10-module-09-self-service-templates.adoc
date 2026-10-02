@@ -1,4 +1,4 @@
-= Module 6: Enable self-service with templates
+= Module 9: Enable self-service with templates
 :source-highlighter: rouge
 :toc: macro
 :toclevels: 1
