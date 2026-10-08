@@ -79,11 +79,9 @@ EOF
 
 . Find the `openshift-dev-spaces` Application and click into it. Watch the sync progress -- Argo CD will deploy a CheCluster resource:
 
-. The CheCluster resource should have a number of child resources that it manages, including the `backstage-developer-hub` Deployment
+. The CheCluster resource should have a number of child resources that it manages, including the core Dev Spaces Deployments; devspaces-dashboard, che-gateway, and devspaces.
 
-`Insert Image`
-
-And that's it! You've deployed an instance of Red Hat Developer Hub using Operator and the Backstage CR that it uses to configure deployments.
+image::dev-spaces/dev-spaces-argo-app.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
 
 == Exercise 2: Launch a workspace for Parasol Insurance development
 
