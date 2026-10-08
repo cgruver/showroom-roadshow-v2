@@ -83,9 +83,33 @@ EOF
 
 image::dev-spaces/dev-spaces-argo-app.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
 
-== Exercise 2: Launch a workspace for Parasol Insurance development
+== Exercise 3: Launch a workspace for Parasol Insurance development
 
-== Exercise 3: Add some guardrails to developer workspaces
+https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance.git[parasol/parasol-insurance GitLab repository,window=gitlab]
+
+image::dev-spaces/parasol-insurance-readme.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/login-with-openshift.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/openshift-auth-providers.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/authorize-dev-spaces.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/trust-the-workspace-repo.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/workspace-starting.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/authorize-gitlab.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/trust-the-code-authors.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/trust-the-publishers.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/extensions-installing.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+image::dev-spaces/extensions-installed.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+
+== Exercise 4: Add some guardrails to developer workspaces
 
 . In the **Terminal** tab, patch the Argo CD Application:
 +
@@ -94,7 +118,7 @@ image::dev-spaces/dev-spaces-argo-app.png[ArgoCD deploying Dev Spaces,link=self,
 oc patch application openshift-dev-spaces -n openshift-gitops --type merge -p '{"spec":{"source":{"path":"overlays/02-guardrails"}}}'
 ----
 
-== Exercise 4: Enable an AI harness for AI enhanced development
+== Exercise 5: Enable an AI harness for AI enhanced development
 
 . In the **Terminal** tab, patch the Argo CD Application:
 +
