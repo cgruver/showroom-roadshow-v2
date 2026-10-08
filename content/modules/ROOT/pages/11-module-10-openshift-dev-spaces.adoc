@@ -16,7 +16,35 @@ By the end of this module, you will be able to:
 * Add guardrails to Dev Spaces to set limits for CPU, Memory, and Storage use
 * Create centrally managed configurations for AI harnesses
 
-== Exercise 1: Deploy an instance of OpenShift Dev Spaces
+== Exercise 1: Explore the base configuration
+
+A git repository has been pre-created for you with the Dev Spaces configuration that we will deploy in this module.
+
+Take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-dev-spaces-config.git[rhdh/ocp-pe-wkshp-dev-spaces-config GitLab repository,window=gitlab].
+
+NOTE: If prompted to log in to GitLab, use username `pe1` and password `{common_password}`.
+
+The *base/* folder contains the `checluster.yaml` file that is used to configure an instance of Red Hat OpenShift Dev Spaces.  There is also a _kustomization.yaml_ file, because we will leverage Kustomize to add additional configuration later in this module.
+
+TIP: The `checluster.yaml` file has inline comments that explain specific sections. It is recommended that you review the comments to gain a better understanding of how the `CheCluster` custom resource is used to configure Red Hat OpenShift Dev Spaces.
+
+=== About Kustomize
+
+This workshop uses link:https://kustomize.io[Kustomize,window=kustomize_docs] https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays[overlays,window=k8s_docs] to manage the layers of configuration that construct and enhance your internal developer portal. Argo CD supports both Kustomize and link:https://helm.sh[Helm,window=helm_docs] for rendering Kubernetes manifests, allowing us to use a set of base manifests to which we apply overrides per environment or per workshop module. We chose this approach to illustrate progressive enhancement of an OpenShift Dev Spaces deployment.
+
+https://kustomize.io/[Kustomize,window=kustomize_docs] uses the declarations in the _kustomization.yaml_ file to "render" your configuration files. 
+
+Preview the Kustomize output in the terminal using the following commands:
+
+[source,bash,role="execute",subs="attributes+"]
+----
+git clone https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-dev-spaces-config
+oc kustomize ocp-pe-wkshp-dev-spaces-config/base
+----
+
+The rendered CheCluster could be applied to OpenShift using `oc apply -k`, but in your case Argo CD will take care of that.
+
+== Exercise 2: Deploy an instance of OpenShift Dev Spaces
 
 . In the **Terminal** tab, create the Argo CD Application:
 +
@@ -42,6 +70,20 @@ spec:
       selfHeal: true
 EOF
 ----
+
+. Open the **Argo CD** tab. Log in if prompted:
++
+* Click **Log in via OpenShift**, select the **developers** identity provider
+* Username: `pe1`
+* Password: `{common_password}`
+
+. Find the `openshift-dev-spaces` Application and click into it. Watch the sync progress -- Argo CD will deploy a CheCluster resource:
+
+. The CheCluster resource should have a number of child resources that it manages, including the `backstage-developer-hub` Deployment
+
+`Insert Image`
+
+And that's it! You've deployed an instance of Red Hat Developer Hub using Operator and the Backstage CR that it uses to configure deployments.
 
 == Exercise 2: Launch a workspace for Parasol Insurance development
 
