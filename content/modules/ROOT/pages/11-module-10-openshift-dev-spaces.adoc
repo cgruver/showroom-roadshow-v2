@@ -261,11 +261,44 @@ Now, apply the configuration by updating the ArgoCD application as before:
 oc patch application openshift-dev-spaces -n openshift-gitops --type merge -p '{"spec":{"source":{"path":"overlays/03-ai-assistant"}}}'
 ----
 
+. Switch to the `ArgoCD` tab and note the deployed changes to the `openshift-dev-spaces` application.
++
+TIP: Click the `Refresh` button if the changes have not applied yet.
++
+image::dev-spaces/kilo-code-config-applied.png[Apply Kilo Code Config,link=self,window=blank,align="center",width=700,title=Dev Spaces: Apply Kilo Code Config]
 
+Now that we have the configuration in place for Kilo Code, let's try it out!
 
+We are now going to recreate the Parasol Insurance workspace.  But, this time we will create it from the dashboard.
+
+. Open the **OCP Console** tab.
++
+If prompted to log in, select the **developers** option, and log in with your credentials:
++
+* Username: `pe1`
+* Password: `{common_password}`
+
+. Click on the icon that looks like 9 small boxes and select `Red Hat OpenShift Dev Spaces` from the drop down menu.
++
+image::dev-spaces/open-dashboard.png[Open Dev Spaces Dashboard,link=self,window=blank,align="center",width=350,title=Dev Spaces: Open Dev Spaces Dashboard]
+
+. In the dashboard, click on `Create Workspace` in the top left hand nav column.
++
+image::dev-spaces/create-workspace-menu.png[Create Workspace Menu,link=self,window=blank,align="center",width=350,title=Dev Spaces: Create Workspace Menu]
+
+. In the dialog box titled `Git repo URL` paste the following URL:
++
 [source,bash,role="execute",subs="attributes+"]
 ----
 https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance.git
 ---
+
+. Click `Create & Open`
++
+image::dev-spaces/create-workspace-from-git-url.png[Create Workspace,link=self,window=blank,align="center",width=350,title=Dev Spaces: Create Workspace]
+
+Your new workspace should launch as before.
+
+NOTE: There are not so many clicks this time.  That first one was more painful because we had to authorize all of the apps.
 
 == Module summary
