@@ -95,22 +95,24 @@ image::dev-spaces/parasol-insurance-readme.png[ArgoCD deploying Dev Spaces,link=
 
 Now, there are going to be a few clicks between here and a running workspace.  Never fear, most of these clicks are one time only.
 
-. First, click on `Log in with OpenShift`
-
+. First, click on `Log in with OpenShift`.  Enter your username and password if prompted.
++
+* Username: `pe1`
+* Password: `{common_password}`
 image::dev-spaces/login-with-openshift.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
 
 . Click the `developers` button in the list of OAuth methods
-
++
 image::dev-spaces/openshift-auth-providers.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
 
 . Click `Allow selected permissions`
-
++
 image::dev-spaces/authorize-dev-spaces.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
 
 . Check the box next to `Do not ask me again for other repositories`
 
 . Click `Continue`
-
++
 image::dev-spaces/trust-the-workspace-repo.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
 
 . Log into GitLab
