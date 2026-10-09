@@ -133,11 +133,13 @@ image::dev-spaces/workspace-starting.png[Workspace Startup,link=self,window=blan
 
 Once your workspace starts, you will need to tell VS Code that you trust the code authors, and the extension publishers.
 
-image::dev-spaces/trust-the-code-authors.png[Trust Code Authors,link=self,window=blank,align="left",width=300,title=Dev Spaces: Trust Code Authors] image::dev-spaces/trust-the-publishers.png[Trust Extension Publishers,link=self,window=blank,align="right",width=300,title=Dev Spaces: Trust Extension Publishers]
+image::dev-spaces/trust-the-code-authors.png[Trust Code Authors,link=self,window=blank,align="center",width=350,title=Dev Spaces: Trust Code Authors]
+image::dev-spaces/trust-the-publishers.png[Trust Extension Publishers,link=self,window=blank,align="center",width=350,title=Dev Spaces: Trust Extension Publishers]
 
 NOTE: Look at the left hand vertical nav bar.  You will see extensions automatically being installed.
 
-image::dev-spaces/extensions-installing.png[Extensions Installing,link=self,window=blank,align="left",width=300,title=Dev Spaces: Extensions Installing] image::dev-spaces/extensions-installed.png[Extensions Installed,link=self,window=blank,align="right",width=300,title=Dev Spaces: Extensions Installed]
+image::dev-spaces/extensions-installing.png[Extensions Installing,link=self,window=blank,align="center",width=350,title=Dev Spaces: Extensions Installing]
+image::dev-spaces/extensions-installed.png[Extensions Installed,link=self,window=blank,align="center",width=350,title=Dev Spaces: Extensions Installed]
 
 Your Parasol Insurance workspace is now up and running.  Take a couple of minutes to explore it.
 
