@@ -144,7 +144,7 @@ Your Parasol Insurance workspace is now up and running.  Take a couple of minute
 
 There are two key files that determine your workspace configuration.
 
-. `devfile.yaml` - This is the Dev Spaces workspace configuration file.  It's schema is documented at link:https://devfile.io[Devfile,window=devfile_docs]
+. `devfile.yaml` - This is the Dev Spaces workspace configuration file.  It's schema is documented at link:https://devfile.io[Devfile.io,window=devfile_docs]
 
 . `vscode.code-workspace` - This is a standard VS Code workspace configuration file.
 
@@ -182,7 +182,7 @@ Your developers should treat workspaces as disposable.  They are easy to recreat
 OK, so we have Dev Spaces installed and have successfully deployed a workspace.  In this next exercise we will add some guardrails to our Dev Spaces configuration that will set some resource limits on developers so that they cannot consume too many resources and cause disruption to other users or waste compute resources.
 
 We are going to configure the following:
-+
+
 * Resource Caps for Dev Spaces workspaces - Configured in the CheCluster.  This setting will silently replace resource requests or limits that exceed the specified caps
 * Resource Defaults for Dev Spaces workspaces - Configured in the CheCluster.  This setting will inject default values into workspaces that do not specify the values in the devfile.yaml
 * ResourceQuotas - An OpenShift resource that sets total limits on resource consumption in a user's dev spaces namespace
@@ -192,7 +192,7 @@ We are going to configure the following:
 These new resources are defined in https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-dev-spaces-config.git[rhdh/ocp-pe-wkshp-dev-spaces-config,window=gitlab].
 
 Click on that link above and navigate to `overlays/02-guardrails`
-+
+
 * quotas.yaml - Contains an OpenShift Template which defines ResourceQuotas and LimitRanges.  The Dev Spaces operator will use the Template to create the resources in each user's dev spaces namespace that is managed by the operator.
 * workspace-pruner.yaml - Defines a DevWorkspaceOperatorConfig which configures the built in workspace pruner.  The time is set for 30 days.
 * patches/checluster.yaml - Contains a patch for the CheCluster resource which will set the resource caps and defaults.
