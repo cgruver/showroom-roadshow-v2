@@ -87,7 +87,7 @@ NOTE: Wait until all three deployments have completed before proceeding.  You wi
 
 == Exercise 3: Launch a workspace for Parasol Insurance development
 
-Now that we have Dev Spaces installed and running in our cluster.  Let's launch a workspace.
+Now that we have Dev Spaces installed and running in our cluster.  let us launch a workspace.
 
 . Click on this link to go to the Git repo for the Parasol Insurance application: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance.git[parasol/parasol-insurance GitLab repository,window=gitlab]
 
@@ -95,7 +95,7 @@ Now that we have Dev Spaces installed and running in our cluster.  Let's launch 
 
 image::dev-spaces/parasol-insurance-readme.png[Contributor Badge,link=self,window=blank,align="center",width=700,title=Dev Spaces: Contributor Badge]
 
-Now, there are going to be a few clicks between here and a running workspace.  Never fear, most of these clicks are one time only.
+Now there are going to be a few clicks between here and a running workspace.  Never fear, most of these clicks are one time only.
 
 . First, click on `Log in with OpenShift`.  Enter your username and password if prompted.
 +
@@ -149,7 +149,7 @@ NOTE: Look at the left hand vertical nav bar.  You will see extensions automatic
 
 Your Parasol Insurance workspace is now up and running.  Take a couple of minutes to explore it.
 
-image::dev-spaces/parasol-insurance-workspace.png[Parasol Insurance Workspace,link=self,window=blank,align="center",width=350,title=Dev Spaces: Parasol Insurance Workspace]
+image::dev-spaces/parasol-insurance-workspace.png[Parasol Insurance Workspace,link=self,window=blank,align="center",width=700,title=Dev Spaces: Parasol Insurance Workspace]
 
 There are two key files that determine your workspace configuration.
 
@@ -161,7 +161,7 @@ TIP: Because these files are in the git repository along with the source code, t
 
 == Exercise 4: Access the Dev Spaces Dashboard
 
-We just launched a workspace directly from the Git repository hosting the source code for our project.  Now, let's access the user dashboard for Dev Spaces.  The dashboard gives developers a UI from which they can manage the full lifecycle of their workspaces.
+We just launched a workspace directly from the Git repository hosting the source code for our project.  Now let us access the user dashboard for Dev Spaces.  The dashboard gives developers a UI from which they can manage the full lifecycle of their workspaces.
 
 . Open the **OCP Console** tab.
 +
@@ -172,7 +172,7 @@ If prompted to log in, select the **developers** option, and log in with your cr
 
 . Click on the icon that looks like 9 small boxes and select `Red Hat OpenShift Dev Spaces` from the drop down menu.
 +
-image::dev-spaces/open-dashboard.png[Open Dev Spaces Dashboard,link=self,window=blank,align="center",width=350,title=Dev Spaces: Open Dev Spaces Dashboard]
+image::dev-spaces/open-dashboard.png[Open Dev Spaces Dashboard,link=self,window=blank,align="center",width=500,title=Dev Spaces: Open Dev Spaces Dashboard]
 
 You are now in the Dev Spaces dashboard.  From here you can manage your workspaces, and personalized configuration.
 
@@ -188,7 +188,7 @@ image::dev-spaces/select-workspace-delete.png[Select Workspace to Delete,link=se
 
 . Check the box next to `I understand, this operation cannot be reverted.` and click `Delete`
 +
-image::dev-spaces/delete-workspace.png[Delete Workspace,link=self,window=blank,align="center",width=350,title=Dev Spaces: Delete Workspace]
+image::dev-spaces/delete-workspace.png[Delete Workspace,link=self,window=blank,align="center",width=500,title=Dev Spaces: Delete Workspace]
 
 Your developers should treat workspaces as disposable.  They are easy to recreate from the project code.
 
@@ -212,7 +212,7 @@ Click on that link above and navigate to `overlays/02-guardrails`
 * `workspace-pruner.yaml` - Defines a DevWorkspaceOperatorConfig which configures the built in workspace pruner.  The time is set for 30 days.
 * `patches/checluster.yaml` - Contains a patch for the CheCluster resource which will set the resource caps and defaults.
 
-Now, apply the changes to the Dev Spaces configuration:
+Now apply the changes to the Dev Spaces configuration:
 
 . In the **Terminal** tab, patch the Argo CD Application:
 +
@@ -257,7 +257,7 @@ We are taking advantage of a Dev Spaces feature here.  In a similar fashion to h
 
 NOTE: The annotations and labels that you see on the ConfigMap are the instructions for the Dev Spaces operator that tell it to mount the files defined in the ConfigMap into running workspaces at the path `/globalconfig`.  There is startup logic baked into our workspace image that will inject the URL and API key into the config file and copy it into the appropriate place in the workspace.  In this way, Kilo Code is automatically configured for developers to use.
 
-Now, apply the configuration by updating the ArgoCD application as before:
+Now apply the configuration by updating the ArgoCD application as before:
 
 . In the **Terminal** tab, patch the Argo CD Application:
 +
@@ -272,7 +272,7 @@ TIP: Click the `Refresh` button if the changes have not applied yet.
 +
 image::dev-spaces/kilo-code-config-applied.png[Apply Kilo Code Config,link=self,window=blank,align="center",width=700,title=Dev Spaces: Apply Kilo Code Config]
 
-Now that we have the configuration in place for Kilo Code, let's try it out!
+Now that we have the configuration in place for Kilo Code, let us try it out!
 
 We are now going to recreate the Parasol Insurance workspace.  But, this time we will create it from the dashboard.
 
@@ -296,14 +296,33 @@ image::dev-spaces/create-workspace-menu.png[Create Workspace Menu,link=self,wind
 [source,bash,role="execute",subs="attributes+"]
 ----
 https://gitlab-gitlab.{openshift_cluster_ingress_domain}/parasol/parasol-insurance.git
----
+----
 
 . Click `Create & Open`
 +
 image::dev-spaces/create-workspace-from-git-url.png[Create Workspace,link=self,window=blank,align="center",width=350,title=Dev Spaces: Create Workspace]
-
++
 Your new workspace should launch as before.
-
++
 NOTE: There are not so many clicks this time.  That first one was more painful because we had to authorize all of the apps.
+
+. Once the workspace has started and all of the extensions have installed, you should see a yellow icon for Kilo Code in the top right part of your workspace.
++
+image::dev-spaces/kilo-code-icon.png[Kilo Code,link=self,window=blank,align="center",width=350,title=Dev Spaces: Kilo Code]
+
+. Click on that icon to activate a session.
++
+image::dev-spaces/kilo-code-session.png[Kilo Code,link=self,window=blank,align="center",width=350,title=Dev Spaces: Kilo Code]
+
+. Enter the following prompt into the dialog box:
++
+[source,bash,role="execute",subs="attributes+"]
+----
+Explain the application that is defined in this project.
+----
+
+. You should see a response similar to:
++
+image::dev-spaces/kilo-code-response.png[Kilo Code,link=self,window=blank,align="center",width=350,title=Dev Spaces: Kilo Code]
 
 == Module summary
