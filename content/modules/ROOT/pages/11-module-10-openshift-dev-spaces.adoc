@@ -325,4 +325,22 @@ Explain the application that is defined in this project.
 +
 image::dev-spaces/kilo-code-response.png[Kilo Code,link=self,window=blank,align="center",width=350,title=Dev Spaces: Kilo Code]
 
+== Exercise 7: Advanced Dev Spaces Capabilities
+
+[source,bash,role="execute",subs="attributes+"]
+----
+mvn package
+----
+
+[source,bash,role="execute",subs="attributes+"]
+----
+podman build -t test:test .
+----
+
+[source,bash,role="execute",subs="attributes+"]
+----
+podman run -d --rm --name parasol -p 8080:8080 test:test
+----
+
+
 == Module summary
