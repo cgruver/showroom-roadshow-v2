@@ -91,7 +91,7 @@ Now that we have Dev Spaces installed and running in our cluster.  Let's launch 
 
 . Scroll down to the README.md and note the `Developer Workspace` contributor badge.  Click on that badge to start a new workspace.
 
-image::dev-spaces/parasol-insurance-readme.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+image::dev-spaces/parasol-insurance-readme.png[Contributor Badge,link=self,window=blank,align="center",width=700,title=Dev Spaces: Contributor Badge]
 
 Now, there are going to be a few clicks between here and a running workspace.  Never fear, most of these clicks are one time only.
 
@@ -99,46 +99,47 @@ Now, there are going to be a few clicks between here and a running workspace.  N
 +
 * Username: `pe1`
 * Password: `{common_password}`
-image::dev-spaces/login-with-openshift.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
++
+image::dev-spaces/login-with-openshift.png[OpenShift Login,link=self,window=blank,align="center",width=350,title=Dev Spaces: OpenShift Login]
 
 . Click the `developers` button in the list of OAuth methods
 +
-image::dev-spaces/openshift-auth-providers.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+image::dev-spaces/openshift-auth-providers.png[OpenShift Auth Providers,link=self,window=blank,align="center",width=350,title=Dev Spaces: OpenShift Auth Providers]
 
 . Click `Allow selected permissions`
 +
-image::dev-spaces/authorize-dev-spaces.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+image::dev-spaces/authorize-dev-spaces.png[Authorize Dev Spaces,link=self,window=blank,align="center",width=350,title=Dev Spaces: Authorize Dev Spaces]
 
 . Check the box next to `Do not ask me again for other repositories`
 
 . Click `Continue`
 +
-image::dev-spaces/trust-the-workspace-repo.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
+image::dev-spaces/trust-the-workspace-repo.png[Trust Git Repo,link=self,window=blank,align="center",width=700,title=Dev Spaces: Trust Git Repo]
 
-. Log into GitLab
+. Log into GitLab if prompted
 +
 * Username: `pe1`
 * Password: `{common_password}`
 
 . Click `Authorize devspaces`
-
-image::dev-spaces/authorize-gitlab.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
++
+image::dev-spaces/authorize-gitlab.png[Authorize Dev Spaces in GitLab,link=self,window=blank,align="center",width=700,title=Dev Spaces: Authorize Dev Spaces in GitLab]
 
 Your workspace is now starting up.
-
-image::dev-spaces/workspace-starting.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
++
+image::dev-spaces/workspace-starting.png[Workspace Startup,link=self,window=blank,align="center",width=700,title=Dev Spaces: Workspace Startup]
 
 . Once your workspace starts, you will need to tell VS Code that you trust the code authors, and the extension publishers.
-
-image::dev-spaces/trust-the-code-authors.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
-
-image::dev-spaces/trust-the-publishers.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
++
+image::dev-spaces/trust-the-code-authors.png[Trust Code Authors,link=self,window=blank,align="center",width=350,title=Dev Spaces: Trust Code Authors]
++
+image::dev-spaces/trust-the-publishers.png[Trust Extension Publishers,link=self,window=blank,align="center",width=350,title=Dev Spaces: Trust Extension Publishers]
 
 . Note the left hand vertical nav bar.  You will see extensions automatically being installed.
-
-image::dev-spaces/extensions-installing.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
-
-image::dev-spaces/extensions-installed.png[ArgoCD deploying Dev Spaces,link=self,window=blank,align="center",width=700,title=Dev Spaces: ArgoCD Application]
++
+image::dev-spaces/extensions-installing.png[Extensions Installing,link=self,window=blank,align="center",width=350,title=Dev Spaces: Extensions Installing]
++
+image::dev-spaces/extensions-installed.png[Extensions Installed,link=self,window=blank,align="center",width=350,title=Dev Spaces: Extensions Installed]
 
 Your Parasol Insurance workspace is now up and running.  Take a couple of minutes to explore it.
 
