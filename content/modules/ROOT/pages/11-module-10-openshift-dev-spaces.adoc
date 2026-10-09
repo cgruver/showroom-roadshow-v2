@@ -148,9 +148,56 @@ There are two key files that determine your workspace configuration.
 
 . `vscode.code-workspace` - This is a standard VS Code workspace configuration file.
 
-TIP: Because these files are in the git repository along with the source code, the workspace configuration is managed just like the rest of the code.  This makes workspaces reusable and sharable.  Engineer the workspace once, and the whole team takes advantage.  Onboarding new team members goes from days of workstation configuration to mia single click of the contributor badge. 
+TIP: Because these files are in the git repository along with the source code, the workspace configuration is managed just like the rest of the code.  This makes workspaces reusable and sharable.  Engineer the workspace once, and the whole team takes advantage.  Onboarding new team members goes from days of workstation configuration to a single click of the contributor badge. 
 
-== Exercise 4: Add some guardrails to developer workspaces
+== Exercise 4: Access the Dev Spaces Dashboard
+
+We just launched a workspace directly from the Git repository hosting the source code for our project.  Now, let's access the user dashboard for Dev Spaces.  The dashboard gives developers a UI from which they can manage the full lifecycle of their workspaces.
+
+. Open the **OCP Console** tab.
++
+If prompted to log in, select the **developers** option, and log in with your credentials:
++
+* Username: `pe1`
+* Password: `{common_password}`
+
+. Click on the icon that looks like 9 small boxes.
+
+. Select `Red Hat OpenShift Dev Spaces` from the drop down menu.
+
+You are now in the Dev Spaces dashboard.  From here you can manage your workspaces, and personalized configuration.
+
+Delete the workspace that we just provisioned.  We will provision a new instance later in this module.
+
+. Look at the left hand nav, and click on the three dots that will appear when you hover your mouse over `parasol-insurance`.
+
+. Select `Delete Workspace` from the dropdown.
+
+. Check the box next to `I understand, this operation cannot be reverted.` and click `Delete`
+
+Your developers should treat workspaces as disposable.  They are easy to recreate from the project code.
+
+== Exercise 5: Add some guardrails to developer workspaces
+
+OK, so we have Dev Spaces installed and have successfully deployed a workspace.  In this next exercise we will add some guardrails to our Dev Spaces configuration that will set some resource limits on developers so that they cannot consume too many resources and cause disruption to other users or waste compute resources.
+
+We are going to configure the following:
++
+* Resource Caps for Dev Spaces workspaces - Configured in the CheCluster.  This setting will silently replace resource requests or limits that exceed the specified caps
+* Resource Defaults for Dev Spaces workspaces - Configured in the CheCluster.  This setting will inject default values into workspaces that do not specify the values in the devfile.yaml
+* ResourceQuotas - An OpenShift resource that sets total limits on resource consumption in a user's dev spaces namespace
+* LimitRanges - An OpenShift resource that sets container level constraints on resource consumption
+* Stale Workspace Pruner - Configured in a DevWorkspaceOperatorConfig resource.  This setting will delete workspaces that have not been started in a configurable amount of time
+
+These new resources are defined in https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-dev-spaces-config.git[rhdh/ocp-pe-wkshp-dev-spaces-config,window=gitlab].
+
+Click on that link above and navigate to `overlays/02-guardrails`
++
+* quotas.yaml - Contains an OpenShift Template which defines ResourceQuotas and LimitRanges.  The Dev Spaces operator will use the Template to create the resources in each user's dev spaces namespace that is managed by the operator.
+* workspace-pruner.yaml - Defines a DevWorkspaceOperatorConfig which configures the built in workspace pruner.  The time is set for 30 days.
+* patches/checluster.yaml - Contains a patch for the CheCluster resource which will set the resource caps and defaults.
+
+Now, apply the changes to the Dev Spaces configuration:
 
 . In the **Terminal** tab, patch the Argo CD Application:
 +
