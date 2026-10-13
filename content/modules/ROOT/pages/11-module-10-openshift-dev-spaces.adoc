@@ -9,7 +9,7 @@ We will now make that happen with OpenShift Dev Spaces.
 
 OpenShift Dev Spaces is a full featured Cloud IDE (CDE).  It includes a Red Hat supported browser native instance of Code OSS ( Visual Studio Code ).  But, don't let the browser part cause you any stress.  Browser native VS Code does not make any compromises.  Your multi-monitor setup is safe, and your extensions are compatible ( with the exception of architecture specific extensions that don't run on Linux.  But, if you depend on any of those, you likely are not developing for a Linux or container based eco-system anyway. )
 
-The heart of OpenShift Dev Spaces are containerized workspaces defined with a configuration-as-code approach.  Each workspace configuration can be tailored to a specific type of work or even a specific project.  The container images backing workspaces can be managed centrally ensuring that tools, frameworks, and languages are consistent, secure, and up-to-date. OpenShift Dev Spaces moves all of your developer workload into a container based environment running on OpenShift, with access to the cloud scale of OpenShift resources.
+At the heart of OpenShift Dev Spaces are containerized workspaces defined with a configuration-as-code approach.  Each workspace configuration can be tailored to a specific type of work or even a specific project.  The container images backing workspaces can be managed centrally ensuring that tools, frameworks, and languages are consistent, secure, and up-to-date. OpenShift Dev Spaces moves all of your developer workload into a container based environment running on OpenShift, with access to the cloud scale of OpenShift resources.
 
 Empowering developers, and engineers with OpenShift Dev Spaces is like giving teams access to a whole library of virtual workstations, each of which is bespoke engineered for a particular type of work or project.
 
@@ -223,11 +223,11 @@ The configuration for the workspace includes test-containers which enable a deve
 
 . Open the Task Manager extension.  It is the icon that looks like a small clipboard in the left hand tool column.
 + 
-image::dev-spaces/open-task-manager.png[VS Code Task Manager,link=self,window=blank,align="center",width=700,title=Dev Spaces: VS Code Task Manager]
+image::dev-spaces/open-task-manager.png[VS Code Task Manager,link=self,window=blank,align="center",width=350,title=Dev Spaces: VS Code Task Manager]
 
 . Click on the green `Play Button` icon to the right of the task named `Start Development mode`.  The icon will appear when you hover your mouse over the task name.
 + 
-image::dev-spaces/start-live-dev-mode.png[VS Code Task Manager,link=self,window=blank,align="center",width=700,title=Dev Spaces: VS Code Task Manager]
+image::dev-spaces/start-live-dev-mode.png[VS Code Task Manager,link=self,window=blank,align="center",width=350,title=Dev Spaces: VS Code Task Manager]
 
 . You should see the application build and then start running in live reload mode.
 + 
