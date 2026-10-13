@@ -3,13 +3,17 @@
 :toc: macro
 :toclevels: 1
 
-Parasol's developers can now utilize self-service templates to provision new application environments.  Let us take this to another level and enable developers to provision full development environments.  Imagine a world where the developers can; maintain legacy applications, add new features to growing applications, and create greenfield applications, all without having to fight with tools, dependencies, configuration, and resource constraints on their local workstations.
+Parasol's developers can now utilize self-service templates to provision new application environments.  Let us take this to another level and enable developers to provision full development environments, complete with an in-browser IDE based on VS Code, podman container runtime, testing, debugging, build tools, and agentic AI.  Imagine a world where the developers can; maintain legacy applications, add new features to growing applications, and create greenfield applications, all without having to fight with tools, dependencies, configuration, and resource constraints on their local workstations.
 
 We will now make that happen with OpenShift Dev Spaces.
 
 OpenShift Dev Spaces is a full featured Cloud IDE (CDE).  It includes a Red Hat supported browser native instance of Code OSS ( Visual Studio Code ).  But, don't let the browser part cause you any stress.  Browser native VS Code does not make any compromises.  Your multi-monitor setup is safe, and your extensions are compatible ( with the exception of architecture specific extensions that don't run on Linux.  But, if you depend on any of those, you likely are not developing for a Linux or container based eco-system anyway. )
 
-OpenShift Dev Spaces moves all of your developer workload into a container based environment running on OpenShift, with access to the cloud scale of OpenShift resources.
+The heart of OpenShift Dev Spaces are containerized workspaces defined with a configuration-as-code approach.  Each workspace configuration can be tailored to a specific type of work or even a specific project.  The container images backing workspaces can be managed centrally ensuring that tools, frameworks, and languages are consistent, secure, and up-to-date. OpenShift Dev Spaces moves all of your developer workload into a container based environment running on OpenShift, with access to the cloud scale of OpenShift resources.
+
+Empowering developers, and engineers with OpenShift Dev Spaces is like giving teams access to a whole library of virtual workstations, each of which is bespoke engineered for a particular type of work or project.
+
+Stop battling configuration drift, conflicts, and constraints on local workstations or IDEs and embrace the power of OpenShift Dev Spaces.
 
 You can find the documentation here: https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.30[OpenShift Dev Spaces Documentation,window=dev-spaces-docs]
 
@@ -19,20 +23,23 @@ By the end of this module, you will be able to:
 
 * Create an instance of OpenShift Dev Spaces using the CheCluster custom resource
 * Launch a workspace from a git repository
+* Run containers in a secured, rootless environment
+* Code, Build, Debug, and Test applications in a rapid feedback cycle 
 * Add guardrails to Dev Spaces to set limits for CPU, Memory, and Storage use
 * Create centrally managed configurations for AI harnesses
+* Embed an AI harness in workspaces
 
 == Exercise 1: Explore the base configuration
 
 There is some supporting infrastructure that is already deployed for you in this OpenShift cluster.
 
-. An instance of OpenVSX server preloaded with a curated set of VS Code extensions.  This ensures that developers are only using extensions that have been scanned and approved for use in the enterprise.  The OpenVSX server is deployed in the https://console-openshift-console.{openshift_cluster_ingress_domain}/k8s/ns/che-openvsx/core{tilde}v1{tilde}Pod[`che-openvsx`,window=che-openvsx] namespace in your OpenShift cluster.  You can read more about how to configure it in the Dev Spaces documentation.
+. An instance of OpenVSX server preloaded with a curated set of VS Code extensions.  This ensures that developers are only using extensions that have been scanned and approved for use in the enterprise.  The OpenVSX server is deployed in the https://console-openshift-console.{openshift_cluster_ingress_domain}/k8s/ns/che-openvsx/core{tilde}v1{tilde}Pod[`che-openvsx`,window=che-openvsx] namespace in your OpenShift cluster.  You can read more about how to configure it in the https://docs.redhat.com/en/documentation/red_hat_openshift_dev_spaces/3.30[OpenShift Dev Spaces Documentation,window=dev-spaces-docs].
 
-. Tekton pipelines for building workspace tooling images.  The images that OpenShift Dev Spaces workspaces run can be fully customized with the coding languages, dependencies, frameworks, and other tools needed by development teams.  If you want to take a look at the pipeline, follow this link: https://console-openshift-console.{openshift_cluster_ingress_domain}/pipelines/ns/workspace-images[Workspace Images Pipeline,window=workspace-image-pipeline].
+. Tekton pipelines for building workspace tooling images.  The images that OpenShift Dev Spaces workspaces run can be fully customized with the coding languages, dependencies, frameworks, and other tools needed by development teams.  If you want to take a look at the pipeline, follow this link: https://console-openshift-console.{openshift_cluster_ingress_domain}/pipelines/ns/workspace-images[Workspace Images Pipeline,window=workspace-image-pipeline].  The image builds rely on the open source https://cekit.io/[CEKIT,window=cekit] project.  CEKIT allows engineers to use their favorite container build tools without maintaining a fleet of individual Containerfile definitions.  The CEKIT manifests for this workshop can be viewed here: https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/workspace-images.git[rhdh/workspace-images,window=gitlab].
 
 A git repository has been pre-created for you with the Dev Spaces configuration that we will deploy in this module.
 
-Take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-dev-spaces-config.git[rhdh/ocp-pe-wkshp-dev-spaces-config GitLab repository,window=gitlab].
+Take a look at the https://gitlab-gitlab.{openshift_cluster_ingress_domain}/rhdh/ocp-pe-wkshp-dev-spaces-config.git[rhdh/ocp-pe-wkshp-dev-spaces-config,window=gitlab] GitLab repository.
 
 NOTE: If prompted to log in to GitLab, use username `pe1` and password `{common_password}`.
 
@@ -171,6 +178,8 @@ There are two key files that determine your workspace configuration.
 
 TIP: Because these files are in the git repository along with the source code, the workspace configuration is managed just like the rest of the code.  This makes workspaces reusable and sharable.  Engineer the workspace once, and the whole team takes advantage.  Onboarding new team members goes from days of workstation configuration to a single click of the contributor badge. 
 
+TIP: Workspaces also support the cloning of multiple code repositories. You are not limited 1:1 code repo to workspace. In a multi-repo configuration, the `devfile.yaml` and `vscode.code-workspace` files would live in "primary" code repository that the workspace is created from.  The other code repositories are cloned at workspace creation.
+
 One of the most compelling features of OpenShift Dev Spaces is that it enables a complete podman based container runtime inside of your workspaces.  That's right.  You can run `podman build`, `podman run`, `podman compose`, etc... all inside of your workspaces, completely rootless, and completely secure.
 
 Let us prove that now.
@@ -187,6 +196,8 @@ podman run -d --rm --name webserver -p 8080:80 quay.io/libpod/banner
 ----
 +
 image::dev-spaces/podman-run.png[Podman Run,link=self,window=blank,align="center",width=700,title=Dev Spaces: Podman Run]
+
+NOTE: For now you can ignore the popup in the bottom right hand of the screen.  That is just the workspace acknowledging the detection of a new process on port 8080.  We'll access that port from the browser in a bit when we run the Parasol Insurance application in live reload mode.
 
 . Run the following command to query the webserver running in the container you just started
 + 
@@ -206,17 +217,17 @@ podman kill webserver
 
 You just ran a container inside of the container that your workspace is running in on the OpenShift cluster.
 
-Finally we will run a more practical example of using containers in workspaces.  Let us now launch the Parasol Insurance application in live reload mode.
+Next we will run a more practical example of using containers in workspaces.  Let us launch the Parasol Insurance application in live reload mode.
 
-The configuration for the workspace includes test-containers which enable a developer to locally run enough collaborative services to mimic the production runtime.  In this case, when we start the application in live reload mode, it will also start a containerized Kafka broker and Postgres database.
+The configuration for the workspace includes test-containers which enable a developer to locally run enough collaborative services to mimic a production runtime.  In this case, when we start the application in live reload mode, it will also start a containerized Kafka broker and Postgres database.
 
-. Open the Task Manager extension.  It is the icon that looks like a small clipboard.
+. Open the Task Manager extension.  It is the icon that looks like a small clipboard in the left hand tool column.
 + 
 image::dev-spaces/open-task-manager.png[VS Code Task Manager,link=self,window=blank,align="center",width=700,title=Dev Spaces: VS Code Task Manager]
 
 . Click on the green `Play Button` icon to the right of the task named `Start Development mode`.  The icon will appear when you hover your mouse over the task name.
 + 
-image::dev-spaces/open-task-manager.png[VS Code Task Manager,link=self,window=blank,align="center",width=700,title=Dev Spaces: VS Code Task Manager]
+image::dev-spaces/start-live-dev-mode.png[VS Code Task Manager,link=self,window=blank,align="center",width=700,title=Dev Spaces: VS Code Task Manager]
 
 . You should see the application build and then start running in live reload mode.
 + 
@@ -261,7 +272,7 @@ image::dev-spaces/select-workspace-delete.png[Select Workspace to Delete,link=se
 +
 image::dev-spaces/delete-workspace.png[Delete Workspace,link=self,window=blank,align="center",width=500,title=Dev Spaces: Delete Workspace]
 
-Your developers should treat workspaces as disposable.  They are easy to recreate from the project code.
+TIP: Your developers should treat workspaces as disposable.  They are easy to recreate from the project code.
 
 == Exercise 5: Add some guardrails to developer workspaces
 
@@ -312,9 +323,7 @@ image::dev-spaces/resource-quotas.png[View Dev Spaces Guardrails,link=self,windo
 
 == Exercise 6: Enable an AI harness for AI enhanced development
 
-Final step here.  Now let us enable an AI assistant for our developers.
-
-Parasol Insurance has decided to enable the open source AI agent and coding assistant, link:https://devfile.io[Kilo Code,window=devfile_docs].
+Parasol Insurance has decided to enable the open source AI agent and coding assistant, link:https://devfile.io[Kilo Code,window=kilo_code].
 
 We will now provision a centrally managed configuration for Kilo Code that will enable our developers to start using the harness without a lot of configuration work.
 
@@ -327,6 +336,8 @@ We are taking advantage of a Dev Spaces feature here.  In a similar fashion to h
 . Look at the ConfigMap defined in `ai-assistant-cm.yaml`
 
 NOTE: The annotations and labels that you see on the ConfigMap are the instructions for the Dev Spaces operator that tell it to mount the files defined in the ConfigMap into running workspaces at the path `/globalconfig`.  There is startup logic baked into our workspace image that will inject the URL and API key into the config file and copy it into the appropriate place in the workspace.  In this way, Kilo Code is automatically configured for developers to use.
+
+NOTE: This same capability can be used to distribute other global configuration, either mounted as files or injected as environment variables.  It can also inject data stored in external secrets.  For example, a global Maven Settings file can be distributed that ensures Java dependencies are sourced from a controlled artifact registry rather than from the internet.
 
 Now apply the configuration by updating the ArgoCD application as before:
 
